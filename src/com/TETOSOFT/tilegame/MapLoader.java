@@ -1,0 +1,401 @@
+package com.TETOSOFT.tilegame;
+
+import java.awt.*;
+import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
+import java.io.*;
+import java.util.ArrayList;
+
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+
+import com.TETOSOFT.graphics.*;
+import com.TETOSOFT.tilegame.sprites.*;
+
+
+/**
+    The ResourceManager class loads and manages tile Images and
+    "host" Sprites used in the game. Game Sprites are cloned from
+    "host" Sprites.
+*/
+public class MapLoader 
+{
+    private ArrayList tiles;
+    public int currentMap;
+    private GraphicsConfiguration gc;
+
+    // host sprites used for cloning
+    private Sprite playerSprite;
+    private Sprite musicSprite;
+    private Sprite coinSprite;
+    private Sprite goalSprite;
+    private Sprite grubSprite;
+    private Sprite flySprite;
+
+    /**
+        Creates a new ResourceManager with the specified
+        GraphicsConfiguration.
+    */
+    public MapLoader(GraphicsConfiguration gc) 
+    {
+        this.gc = gc;
+        loadTileImages();
+        loadCreatureSprites();
+        loadPowerUpSprites();
+    }
+
+
+    /**
+        Gets an image from the images/ directory.
+    */
+    public Image loadImage(String name) 
+    {
+        String filename = "images/" + name;
+        return new ImageIcon(filename).getImage();
+    }
+
+
+    public Image getMirrorImage(Image image) 
+    {
+        return getScaledImage(image, -1, 1);
+    }
+
+
+    public Image getFlippedImage(Image image) 
+    {
+        return getScaledImage(image, 1, -1);
+    }
+
+
+    private Image getScaledImage(Image image, float x, float y) 
+    {
+
+        // set up the transform
+        AffineTransform transform = new AffineTransform();
+        transform.scale(x, y);
+        transform.translate(
+            (x-1) * image.getWidth(null) / 2,
+            (y-1) * image.getHeight(null) / 2);
+
+        // create a transparent (not translucent) image
+        Image newImage = gc.createCompatibleImage(
+            image.getWidth(null),
+            image.getHeight(null),
+            Transparency.BITMASK);
+
+        // draw the transformed image
+        Graphics2D g = (Graphics2D)newImage.getGraphics();
+        g.drawImage(image, transform, null);
+        g.dispose();
+
+        return newImage;
+    }
+
+
+    public TileMap loadNextMap() 
+    {
+        TileMap map = null;
+        while (map == null) 
+        {
+            currentMap++;
+            try {
+                map = loadMap(
+                    "maps/map" + currentMap + ".txt");
+            }
+            catch (IOException ex) 
+            {
+                if (currentMap == 2) 
+                {
+                    // no maps to load!
+                    return null;
+                }
+                  currentMap = 0;
+                map = null;
+            }
+        }
+
+        return map;
+    }
+
+
+    public TileMap reloadMap() 
+    {
+        try {
+            return loadMap(
+                "maps/map" + currentMap + ".txt");
+        }
+        catch (IOException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+    }
+
+
+    private TileMap loadMap(String filename)
+        throws IOException
+    {
+        ArrayList lines = new ArrayList();
+        int width = 0;
+        int height = 0;
+
+        // read every line in the text file into the list
+        BufferedReader reader = new BufferedReader(
+            new FileReader(filename));
+        while (true) {
+            String line = reader.readLine();
+            // no more lines to read
+            if (line == null) {
+                reader.close();
+                break;
+            }
+
+            // add every line except for comments
+            if (!line.startsWith("#")) {
+                lines.add(line);
+                width = Math.max(width, line.length());
+            }
+        }
+
+        // parse the lines to create a TileEngine
+        height = lines.size();
+        TileMap newMap = new TileMap(width, height);
+        for (int y=0; y<height; y++) {
+            String line = (String)lines.get(y);
+            for (int x=0; x<line.length(); x++) {
+                char ch = line.charAt(x);
+
+                // check if the char represents tile A, B, C etc.
+                int tile = ch - 'A';
+                if (tile >= 0 && tile < tiles.size()) {
+                    newMap.setTile(x, y, (Image)tiles.get(tile));
+                }
+
+                // check if the char represents a sprite
+                else if (ch == 'o') {
+                    addSprite(newMap, coinSprite, x, y);
+                }
+                else if (ch == '!') {
+                    addSprite(newMap, musicSprite, x, y);
+                }
+                else if (ch == '*') {
+                    addSprite(newMap, goalSprite, x, y);
+                }
+                else if (ch == '1') {
+                    addSprite(newMap, grubSprite, x, y);
+                }
+                else if (ch == '2') {
+                    addSprite(newMap, flySprite, x, y);
+                }
+            }
+        }
+
+        // add the player to the map
+        Sprite player = (Sprite)playerSprite.clone();
+        player.setX(TileMapDrawer.tilesToPixels(3));
+        player.setY(lines.size());
+        newMap.setPlayer(player);
+
+        return newMap;
+    }
+
+
+    private void addSprite(TileMap map,
+        Sprite hostSprite, int tileX, int tileY)
+    {
+        if (hostSprite != null) {
+            // clone the sprite from the "host"
+            Sprite sprite = (Sprite)hostSprite.clone();
+
+            // center the sprite
+            sprite.setX(
+                TileMapDrawer.tilesToPixels(tileX) +
+                (TileMapDrawer.tilesToPixels(1) -
+                sprite.getWidth()) / 2);
+
+            // bottom-justify the sprite
+            sprite.setY(
+                TileMapDrawer.tilesToPixels(tileY + 1) -
+                sprite.getHeight());
+
+            // add it to the map
+            map.addSprite(sprite);
+        }
+    }
+
+
+    // -----------------------------------------------------------
+    // code for loading sprites and images
+    // -----------------------------------------------------------
+
+
+    public void loadTileImages()
+    {
+        // keep looking for tile A,B,C, etc. this makes it
+        // easy to drop new tiles in the images/ directory
+        tiles = new ArrayList();
+        char ch = 'A';
+        
+        while (true) 
+        {
+            String name = ch + ".png";
+            File file = new File("images/" + name);
+            if (!file.exists()) 
+                break;
+            
+            tiles.add(loadImage(name));
+            ch++;
+        }
+    }
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    public void loadCreatureSprites() 
+    {
+
+        Image[][] images = new Image[4][];
+
+        // load left-facing images
+        images[0] = new Image[] {
+            loadImage("player1.png"),
+            loadImage("player2.png"),
+		    loadImage("player3.png"), loadImage("player4.png"), loadImage("player5.png"),
+	    	loadImage("player6.png"), loadImage("player7.png"), loadImage("player8.png"), 
+			loadImage("player9.png"), loadImage("player10.png"),
+			loadImage("player11.png"), loadImage("player12.png"),
+			loadImage("player13.png"), loadImage("player14.png"),
+			loadImage("player15.png"), loadImage("player16.png"), 
+            loadImage("fly1.png"),
+            loadImage("fly2.png"),
+            loadImage("fly3.png"),
+            loadImage("grub1.png"),
+            loadImage("grub2.png"),
+        };
+        
+        
+        
+        
+        
+
+        images[1] = new Image[images[0].length];
+        images[2] = new Image[images[0].length];
+        images[3] = new Image[images[0].length];
+        
+        for (int i=0; i<images[0].length; i++) 
+        {
+        //	images[0][i]=images[0][i].getScaledInstance(, , Image.SCALE_DEFAULT);
+            // right-facing images
+            images[1][i] = getMirrorImage(images[0][i]);
+            // left-facing "dead" images
+            images[2][i] = getFlippedImage(images[0][i]);
+            // right-facing "dead" images
+            images[3][i] = getFlippedImage(images[1][i]);
+        }
+
+        // create creature animations
+        Animation[] playerAnim = new Animation[4];
+        Animation[] flyAnim = new Animation[4];
+        Animation[] grubAnim = new Animation[4];
+        
+        playerAnim[0] = createPlayerAnim (images[0][0],images[0][1],images[0][2],images[0][3],images[0][4],images[0][5],images[0][6],images[0][7],images[0][8],images[0][9],images[0][10],images[0][11],images[0][12],images[0][13],images[0][14],images[0][15]);
+        playerAnim[1] = createPlayerAnim (images[1][0],images[1][1],images[1][2],images[1][3],images[1][4],images[1][5],images[1][6],images[1][7],images[1][8],images[1][9],images[1][10],images[1][11],images[1][12],images[1][13],images[1][14],images[1][15]);
+         playerAnim[2] = createPlayerAnim2 (images[2][0]);
+        playerAnim[3] = createPlayerAnim2 (images[3][0]);
+        
+        
+        for (int i=0; i<4; i++) 
+        {
+            flyAnim[i] = createFlyAnim (images[i][16], images[i][17], images[i][18]);
+            grubAnim[i] = createGrubAnim (images[i][19], images[i][20]);
+        }
+
+        // create creature sprites
+        playerSprite = new Player (playerAnim[0], playerAnim[1],playerAnim[2], playerAnim[3]);
+        flySprite = new Fly (flyAnim[0], flyAnim[1],flyAnim[2], flyAnim[3]);
+        grubSprite = new Grub (grubAnim[0], grubAnim[1],grubAnim[2], grubAnim[3]);
+    }
+
+
+    private Animation createPlayerAnim(Image player1,Image player2, Image player3, Image player4, Image player5, Image player6, Image player7, Image player8, Image player9, Image player10, Image player11, Image player12, Image player13, Image player14, Image player15, Image player16)
+    {
+        Animation anim = new Animation();
+        anim.addFrame(player1, 50);
+        anim.addFrame(player2, 50);
+        anim.addFrame(player3, 50);
+        anim.addFrame(player4, 50);
+        anim.addFrame(player5, 50);
+        anim.addFrame(player6, 50);
+        anim.addFrame(player7, 50);
+        anim.addFrame(player8, 50);
+        anim.addFrame(player9, 50);
+        anim.addFrame(player10, 50);
+        anim.addFrame(player11, 50);
+        anim.addFrame(player12, 50);
+        anim.addFrame(player13, 50);
+        anim.addFrame(player14, 50);
+        anim.addFrame(player15, 50);
+        anim.addFrame(player16, 50);
+     
+        return anim;
+    }
+    
+    
+    /**
+     * I use this for DEAD, STOPPED and JUMP case
+     * @param Image
+     * @return animation of that image  
+     */
+    private Animation createPlayerAnim2(Image player1) {
+    	Animation anim = new Animation();
+    	anim.addFrame(player1, 250);
+    	return anim;
+    }
+    
+
+
+    private Animation createFlyAnim(Image img1, Image img2, Image img3)
+    {
+        Animation anim = new Animation();
+        anim.addFrame(img1, 50);
+        anim.addFrame(img2, 50);
+        anim.addFrame(img3, 50);
+        anim.addFrame(img2, 50);
+        return anim;
+    }
+
+
+    private Animation createGrubAnim(Image img1, Image img2)
+    {
+        Animation anim = new Animation();
+        anim.addFrame(img1, 250);
+        anim.addFrame(img2, 250);
+        return anim;
+    }
+
+
+    private void loadPowerUpSprites() 
+    {
+        // create "goal" sprite
+        Animation anim = new Animation();
+        anim.addFrame(loadImage("heart.png"), 150);
+        goalSprite = new PowerUp.Goal(anim);
+
+        // create "star" sprite
+        anim = new Animation();
+        anim.addFrame(loadImage("coin1.png"),250 ) ;  
+        anim.addFrame(loadImage("coin2.png"),250);
+        anim.addFrame(loadImage("coin3.png"),250);
+        anim.addFrame(loadImage("coin4.png"),250);
+        anim.addFrame(loadImage("coin5.png"),250);
+        coinSprite = new PowerUp.Star(anim);
+
+        // create "music" sprite
+        anim = new Animation();
+        anim.addFrame(loadImage("music1.png"), 150);
+        anim.addFrame(loadImage("music2.png"), 150);
+        anim.addFrame(loadImage("music3.png"), 150);
+        anim.addFrame(loadImage("music2.png"), 150);
+        musicSprite = new PowerUp.Music(anim);
+        musicSprite=new PowerUp.Music(anim);
+    }
+
+}
