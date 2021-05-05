@@ -21,7 +21,7 @@ public class GameEngine extends GameCore
     }
     
     public static final float GRAVITY = 0.002f;
-    
+    private Font police=new Font("Arial",Font.PLAIN,18);
     private Point pointCache = new Point();
     private TileMap map;
     private MapLoader mapLoader;
@@ -33,7 +33,16 @@ public class GameEngine extends GameCore
     private GameAction jump;
     private GameAction exit;
     private int collectedStars=0;
-    private int numLives=6;
+    //number of badguys killed
+    private int CreaturesKilled=0;
+    
+    private int CreatureCoefficient=0;
+    //time couonter variable
+    private long elapsedtime=0;
+    
+    private int Score=0;
+    
+    private int numLives=2;
    
     public void init()
     {
@@ -109,15 +118,27 @@ public class GameEngine extends GameCore
     public void draw(Graphics2D g) {
         
         drawer.draw(g, map, screen.getWidth(), screen.getHeight());
-        g.setColor(Color.WHITE);
-        g.drawString("Press ESC for EXIT.",10.0f,20.0f);
+        
         g.setColor(Color.GREEN);
-        g.drawString("Coins: "+collectedStars,300.0f,20.0f);
+        g.drawString("Score: "+Score,300.0f,20.0f);
         g.setColor(Color.YELLOW);
         g.drawString("Lives: "+(numLives),500.0f,20.0f );
         g.setColor(Color.WHITE);
         g.drawString("Home: "+mapLoader.currentMap,700.0f,20.0f);
+        g.setFont(police);
+        //g.drawString("Badguys killed: "+CreaturesKilled, 460, 25);
+        String time="";
+        if((int)elapsedtime/1000>60) time=(int)elapsedtime/1000/60+"min "+(int)elapsedtime/1000%60+" sec";
+        else time=(int)elapsedtime/1000+" sec";
+        //g.drawString("Time: "+time, 460, 150);
+        g.setColor(Color.YELLOW);
+        g.drawString("Time: "+time,10.0f,20.0f);
         
+    }
+    private long UpdateScore( int Startsnbr) {
+    	
+    	Score+= (int)((0.1)*elapsedtime/1000 +0.2*Startsnbr+0.7*CreatureCoefficient)/10;
+    	return  Score;
     }
     
     
@@ -225,6 +246,9 @@ public class GameEngine extends GameCore
      */
     public void update(long elapsedTime) {
         Creature player = (Creature)map.getPlayer();
+        this.elapsedtime+=elapsedTime;
+        
+        //System.out.println(this.elapsedtime);
         
         
         // player is dead! start map over
@@ -292,7 +316,7 @@ public class GameEngine extends GameCore
             creature.collideHorizontal();
         }
         if (creature instanceof Player) {
-            checkPlayerCollision((Player)creature, false);
+            checkPlayerCollision((Player)creature, false,elapsedTime);
         }
         
         // change y
@@ -316,7 +340,7 @@ public class GameEngine extends GameCore
         }
         if (creature instanceof Player) {
             boolean canKill = (oldY < creature.getY());
-            checkPlayerCollision((Player)creature, canKill);
+            checkPlayerCollision((Player)creature, canKill,elapsedTime);
         }
         
     }
@@ -328,7 +352,7 @@ public class GameEngine extends GameCore
      * them.
      */
     public void checkPlayerCollision(Player player,
-            boolean canKill) {
+            boolean canKill,long elapsedTime) {
         if (!player.isAlive()) {
             return;
         }
@@ -337,13 +361,25 @@ public class GameEngine extends GameCore
         Sprite collisionSprite = getSpriteCollision(player);
         if (collisionSprite instanceof PowerUp) {
             acquirePowerUp((PowerUp)collisionSprite);
+            UpdateScore(50);
         } else if (collisionSprite instanceof Creature) {
             Creature badguy = (Creature)collisionSprite;
+            if( badguy instanceof Fly ) {
+            	System.out.println("9atele faracha");
+            	this.CreatureCoefficient=150;
+            }
+            else if(badguy instanceof Grub) {
+            	System.out.println("9atele doudaa");
+            	this.CreatureCoefficient=100;
+            }
             if (canKill) {
                 // kill the badguy and make player bounce
                 badguy.setState(Creature.STATE_DYING);
                 player.setY(badguy.getY() - player.getHeight());
                 player.jump(true);
+                CreaturesKilled++;
+                
+                UpdateScore(0);
             } else {
                 // player dies!
                 player.setState(Creature.STATE_DYING);
@@ -355,6 +391,7 @@ public class GameEngine extends GameCore
                         ex.printStackTrace();
                     }
                     stop();
+                    UpdateHighScoreList(Score);
                 }
             }
         }

@@ -1,6 +1,17 @@
 package com.TETOSOFT.test;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.DisplayMode;
+import java.awt.Font;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.Window;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
 import javax.swing.ImageIcon;
 
 import com.TETOSOFT.graphics.ScreenManager;
@@ -27,7 +38,12 @@ public abstract class GameCore {
 
     private boolean isRunning;
     protected ScreenManager screen;
-
+    private File highscorefile=new File("highscore.txt");
+    private int[] highscorelist= {-1,-2,-3,-4,-5};
+    
+    
+     
+  
 
     /**
         Signals the game loop that it's time to quit
@@ -42,6 +58,7 @@ public abstract class GameCore {
     */
     public void run() {
         try {
+        	highScoreConfig();
             init();
             gameLoop();
         }
@@ -93,6 +110,77 @@ public abstract class GameCore {
 
         isRunning = true;
     }
+    
+    /*** this method creates the high score file if it doesnt exists and 
+         serialize the table of highscores into it*/
+    private void highScoreConfig() {
+    	
+    	if(!highscorefile.exists()) {
+    		try {
+				highscorefile.createNewFile();
+				FileOutputStream fos=new FileOutputStream(highscorefile);
+				ObjectOutputStream oos=new ObjectOutputStream(fos);
+				oos.writeObject(highscorelist);
+				System.out.println("file created with success");
+				
+			} 
+    		catch (Exception e) {e.printStackTrace();}
+    	}
+    	else {
+    		System.out.println("file already exists");
+    		
+    		
+    	}
+    }
+    
+    public void UpdateHighScoreList( int Score) {
+    	
+    	try {
+			FileInputStream fis=new FileInputStream(highscorefile);
+			ObjectInputStream ois=new ObjectInputStream(fis);
+			
+			highscorelist=(int[])ois.readObject();
+			int min=highscorelist[0];
+			int i;
+			
+			 if(!scorexists(Score)) {
+				 
+				 
+					 for (i=0; i < highscorelist.length; i++) {
+						if(highscorelist[i]<min) {
+							min=highscorelist[i];
+							break;
+						}
+					}
+					 System.out.println("i: "+i);
+				 if(i<highscorelist.length &&  highscorelist[i]<Score) highscorelist[i]=Score;
+				 else if( highscorelist[0]<Score) highscorelist[0]=Score;
+				 
+			 }
+			 for (i=0; i < highscorelist.length; i++) {
+					System.out.println(highscorelist[i]);
+				}
+			 
+			 
+			
+			 
+			 
+			 FileOutputStream fos=new FileOutputStream(highscorefile);
+				ObjectOutputStream oos=new ObjectOutputStream(fos);
+				oos.writeObject(highscorelist);
+				
+		}
+    	catch (Exception e) {	e.printStackTrace();}
+    }
+    
+    private boolean scorexists(int number) {
+    	for (int i = 0; i < highscorelist.length; i++) {
+			if(highscorelist[i]==number) {
+				return true;
+			}
+		}
+    	return false;
+    }
 
 
     public Image loadImage(String fileName) {
@@ -117,9 +205,12 @@ public abstract class GameCore {
 
             // draw the screen
             Graphics2D g = screen.getGraphics();
+           
             draw(g);
             g.dispose();
             screen.update();
+            
+            
 
             // don't take a nap! run as fast as possible
             /*try {
