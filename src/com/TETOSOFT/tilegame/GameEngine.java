@@ -32,6 +32,8 @@ public class GameEngine extends GameCore
     private GameAction moveRight;
     private GameAction jump;
     private GameAction exit;
+    private GameAction pause;
+    
     private int collectedStars=0;
     //number of badguys killed
     private int CreaturesKilled=0;
@@ -70,6 +72,11 @@ public class GameEngine extends GameCore
         super.stop();
         
     }
+    /**
+     * */
+    public void pauseGame() {
+    	super.pauseGame();
+    }
     
     
     private void initInput() {
@@ -77,6 +84,7 @@ public class GameEngine extends GameCore
         moveRight = new GameAction("moveRight");
         jump = new GameAction("jump", GameAction.DETECT_INITAL_PRESS_ONLY);
         exit = new GameAction("exit",GameAction.DETECT_INITAL_PRESS_ONLY);
+        pause=new GameAction("pause",GameAction.DETECT_INITAL_PRESS_ONLY);
         
         inputManager = new InputManager(screen.getFullScreenWindow());
         inputManager.setCursor(InputManager.INVISIBLE_CURSOR);
@@ -85,6 +93,8 @@ public class GameEngine extends GameCore
         inputManager.mapToKey(moveRight, KeyEvent.VK_RIGHT);
         inputManager.mapToKey(jump, KeyEvent.VK_SPACE);
         inputManager.mapToKey(exit, KeyEvent.VK_ESCAPE);
+        inputManager.mapToKey(pause, KeyEvent.VK_P);
+        
     }
     
     
@@ -99,6 +109,14 @@ public class GameEngine extends GameCore
         if (player.isAlive()) 
         {
             float velocityX = 0;
+            /** if  p key is pressed it executes pauseGame() method and make a 'return'
+             * to make sure that others inputs commands are not executed */
+            if(pause.isPressed()) {
+            	System.err.println("pause is pressed");
+            	pauseGame();
+            	return;
+            }
+            
             if (moveLeft.isPressed()) 
             {
                 velocityX-=player.getMaxSpeed();
@@ -110,6 +128,7 @@ public class GameEngine extends GameCore
                 player.jump(false);
             }
             player.setVelocityX(velocityX);
+        
         }
         
     }
@@ -130,11 +149,20 @@ public class GameEngine extends GameCore
         String time="";
         if((int)elapsedtime/1000>60) time=(int)elapsedtime/1000/60+"min "+(int)elapsedtime/1000%60+" sec";
         else time=(int)elapsedtime/1000+" sec";
-        //g.drawString("Time: "+time, 460, 150);
         g.setColor(Color.YELLOW);
         g.drawString("Time: "+time,10.0f,20.0f);
         
+        /** this part of code displays the pause message in the screen */
+        if(GameCore.pause) {
+        	g.setColor(Color.RED);
+        	g.setFont(new Font("Arial",Font.PLAIN,40));
+            g.drawString("Paused",300.0f,100.0f);
+            System.err.println("pause menu displayed");
+        }
+        
     }
+    
+    /**this method count the score of the player thanks to this formula  10%time+20%coins+70%creatures-killed */
     private long UpdateScore( int Startsnbr) {
     	
     	Score+= (int)((0.1)*elapsedtime/1000 +0.2*Startsnbr+0.7*CreatureCoefficient)/10;
@@ -246,9 +274,10 @@ public class GameEngine extends GameCore
      */
     public void update(long elapsedTime) {
         Creature player = (Creature)map.getPlayer();
-        this.elapsedtime+=elapsedTime;
         
-        //System.out.println(this.elapsedtime);
+        if(!GameCore.pause)   this.elapsedtime+=elapsedTime;
+        
+        
         
         
         // player is dead! start map over
@@ -259,7 +288,7 @@ public class GameEngine extends GameCore
         
         // get keyboard/mouse input
         checkInput(elapsedTime);
-        
+        if(!GameCore.pause) {
         // update player
         updateCreature(player, elapsedTime);
         player.update(elapsedTime);
@@ -278,6 +307,7 @@ public class GameEngine extends GameCore
             }
             // normal update
             sprite.update(elapsedTime);
+        }
         }
     }
     

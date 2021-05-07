@@ -37,6 +37,7 @@ public abstract class GameCore {
     };
 
     private boolean isRunning;
+    public static boolean pause=false;
     protected ScreenManager screen;
     private File highscorefile=new File("highscore.txt");
     private int[] highscorelist= {-1,-2,-3,-4,-5};
@@ -50,6 +51,15 @@ public abstract class GameCore {
     */
     public void stop() {
         isRunning = false;
+    }
+    
+    /**
+     * this method make pause to the game
+     * */
+    public void pauseGame() {
+    	pause= !pause;
+    	
+    	
     }
 
 
@@ -111,8 +121,8 @@ public abstract class GameCore {
         isRunning = true;
     }
     
-    /*** this method creates the high score file if it doesnt exists and 
-         serialize the table of highscores into it*/
+    /*** this method creates the high score file if it does'nt exists and 
+         serialize the table of high scores into it*/
     private void highScoreConfig() {
     	
     	if(!highscorefile.exists()) {
@@ -199,6 +209,8 @@ public abstract class GameCore {
             long elapsedTime =
                 System.currentTimeMillis() - currTime;
             currTime += elapsedTime;
+            
+            
 
             // update
             update(elapsedTime);
