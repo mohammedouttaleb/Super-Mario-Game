@@ -1,13 +1,25 @@
 package com.TETOSOFT.tilegame;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.util.Iterator;
+
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.border.EmptyBorder;
 
 import com.TETOSOFT.graphics.*;
 import com.TETOSOFT.input.*;
 import com.TETOSOFT.test.GameCore;
 import com.TETOSOFT.tilegame.sprites.*;
+
+import javafx.scene.layout.StackPane;
 
 /**
  * GameManager manages all parts of the game.
@@ -33,6 +45,7 @@ public class GameEngine extends GameCore
     private GameAction jump;
     private GameAction exit;
     private GameAction pause;
+    private boolean firstpause=true;
     
     private int collectedStars=0;
     //number of badguys killed
@@ -45,6 +58,14 @@ public class GameEngine extends GameCore
     private int Score=0;
     
     private int numLives=2;
+    
+    
+    
+    
+    JButton bt1;
+    JButton bt2;
+    JButton bt3;
+    JButton bt4;
    
     public void init()
     {
@@ -135,6 +156,51 @@ public class GameEngine extends GameCore
     
     
     public void draw(Graphics2D g) {
+    	
+    	JFrame mainframe=this.screen.getFullScreenWindow();
+    	JPanel mainpanel=(JPanel)mainframe.getContentPane();
+    	JPanel pausepanel=new JPanel();
+    	/** this part of code displays the pause message in the screen */
+        if(ispause) {
+            
+        	
+        	    
+            //pausepanel.setLayout(new BoxLayout(pausepanel,BoxLayout.Y_AXIS)); 
+            pausepanel.setLayout(new FlowLayout());
+        	pausepanel.setBackground(new Color(0).white);
+             
+            mainpanel.setLayout(new CardLayout(30,40));
+            
+             JButton bt1=new JButton("Resume");
+             JButton bt2=new JButton("High Scores");
+             JButton bt3=new JButton("Music");
+             JButton bt4=new JButton("Quit");
+             
+             bt1.addActionListener(new ActionListener() { 
+            	  public void actionPerformed(ActionEvent e) { 
+            		  System.out.println("quit selected");
+            		    stop();
+            		  } 
+            		} );
+             
+              
+            	  pausepanel.add(bt1);
+            	  pausepanel.add(bt2);
+            	  pausepanel.add(bt3);
+            	  pausepanel.add(bt4);
+              
+            
+          
+        	   mainpanel.add(pausepanel);
+              mainframe.setVisible(true);
+             
+            
+            
+            
+        }
+        else {
+        	//mainpanel.setVisible(false);
+        	//mainpanel=null;
         
         drawer.draw(g, map, screen.getWidth(), screen.getHeight());
         
@@ -152,14 +218,8 @@ public class GameEngine extends GameCore
         g.setColor(Color.YELLOW);
         g.drawString("Time: "+time,10.0f,20.0f);
         
-        /** this part of code displays the pause message in the screen */
-        if(GameCore.pause) {
-        	g.setColor(Color.RED);
-        	g.setFont(new Font("Arial",Font.PLAIN,40));
-            g.drawString("Paused",300.0f,100.0f);
-            System.err.println("pause menu displayed");
-        }
         
+        }   
     }
     
     /**this method count the score of the player thanks to this formula  10%time+20%coins+70%creatures-killed */
@@ -275,7 +335,7 @@ public class GameEngine extends GameCore
     public void update(long elapsedTime) {
         Creature player = (Creature)map.getPlayer();
         
-        if(!GameCore.pause)   this.elapsedtime+=elapsedTime;
+        if(!ispause)   this.elapsedtime+=elapsedTime;
         
         
         
@@ -288,7 +348,7 @@ public class GameEngine extends GameCore
         
         // get keyboard/mouse input
         checkInput(elapsedTime);
-        if(!GameCore.pause) {
+        if(!ispause) {
         // update player
         updateCreature(player, elapsedTime);
         player.update(elapsedTime);

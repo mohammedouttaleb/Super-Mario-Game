@@ -37,7 +37,7 @@ public abstract class GameCore {
     };
 
     private boolean isRunning;
-    public static boolean pause=false;
+    protected boolean ispause=false;
     protected ScreenManager screen;
     private File highscorefile=new File("highscore.txt");
     private int[] highscorelist= {-1,-2,-3,-4,-5};
@@ -57,7 +57,7 @@ public abstract class GameCore {
      * this method make pause to the game
      * */
     public void pauseGame() {
-    	pause= !pause;
+    	ispause= !ispause;
     	
     	
     }
@@ -220,7 +220,7 @@ public abstract class GameCore {
            
             draw(g);
             g.dispose();
-            screen.update();
+            if(!ispause)   screen.update();
             
             
 
