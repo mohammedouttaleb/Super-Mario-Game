@@ -16,6 +16,9 @@ public class Player extends Creature
     {
         super(left, right, deadLeft, deadRight);
     }
+    public Player(Animation left, Animation right, Animation deadLeft, Animation deadRight,Animation jump) {
+    	super(left, right, deadLeft, deadRight,jump);
+    }
 
 
     public void collideHorizontal() {

@@ -3,9 +3,12 @@ package com.TETOSOFT.tilegame.sprites;
 import java.awt.Image;
 import java.lang.reflect.Constructor;
 
+import javax.sound.sampled.FloatControl;
 import javax.swing.ImageIcon;
 
 import com.TETOSOFT.graphics.*;
+import com.TETOSOFT.tilegame.GameEngine;
+import com.TETOSOFT.tilegame.Sound;
 
 /**
     A Creature is a Sprite that is affected by gravity and can
@@ -32,6 +35,7 @@ public abstract class Creature extends Sprite {
 
     /**
         Creates a new Creature with the specified Animations.
+     * @param jump2 
     */
     public Creature(Animation left, Animation right,
         Animation deadLeft, Animation deadRight)
@@ -43,6 +47,18 @@ public abstract class Creature extends Sprite {
         this.deadRight = deadRight;
         state = STATE_NORMAL;
     }
+    public Creature(Animation left, Animation right,
+            Animation deadLeft, Animation deadRight, Animation jump2)
+        {
+            super(right);
+            this.left = left;
+            this.right = right;
+            this.deadLeft = deadLeft;
+            this.deadRight = deadRight;
+            this.jump = jump2;
+            state = STATE_NORMAL;
+        }
+       
    
     public Object clone() {
         // use reflection to create the correct subclass
@@ -148,11 +164,29 @@ public abstract class Creature extends Sprite {
     public void update(long elapsedTime) {
         // select the correct Animation
         Animation newAnim = anim;
-        if (getVelocityX() < 0) {
+        
+		if( GameEngine.isJumping && this instanceof Player) { 
+              Animation jumpAnim=new Animation();
+			  String filename = "images/playerj.png"; Image flying = new
+			  ImageIcon(filename).getImage();
+			  jumpAnim.addFrame(flying, 50);
+			  newAnim = jumpAnim;
+			 }
+		
+		else if (getVelocityX() < 0) {
         	newAnim = left;
         }
         else if (getVelocityX() > 0) {
             newAnim = right;
+        }
+        else if(this instanceof Player && Player.isOnGround() && state != STATE_DYING) {
+    
+        	      Animation jumpAnim=new Animation();
+			      String stands = "images/lazysmurf.png"; Image stand = new
+			      ImageIcon(stands).getImage();
+			      jumpAnim.addFrame(stand, 50);
+		    	  newAnim = jumpAnim;
+		    	  	
         }
         if (state == STATE_DYING && newAnim == left) {
             newAnim = deadLeft;
@@ -160,14 +194,7 @@ public abstract class Creature extends Sprite {
         else if (state == STATE_DYING && newAnim == right) {
             newAnim = deadRight;
         }
-		/*
-		 * else if(state != STATE_DYING && getVelocityX() == 0 && this instanceof Player
-		 * ) { 
-		 *     newAnim.addFrame(flying, 10);
-		 *     String filename = "images/player1.png";
-         *     Image flying =  new ImageIcon(filename).getImage();
-		 * }
-		 */
+		 
         // update the Animation
         if (anim != newAnim) {
             anim = newAnim;

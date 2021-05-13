@@ -94,7 +94,20 @@ public class MapLoader
 
     public TileMap loadNextMap() 
     {
-        TileMap map = null;
+        
+    	  Animation anim = new Animation();
+          if(currentMap==3) {
+              // create "final goal" sprite
+              anim = new Animation();
+              anim.addFrame(loadImage("finalgoal.gif"), 150);
+              goalSprite = new PowerUp.Goal(anim);
+          
+              anim = new Animation();
+              anim.addFrame(loadImage("badguy.gif"), 150);
+              musicSprite = new PowerUp.Music(anim);
+              }
+       
+    	TileMap map = null;
         while (map == null) 
         {
             currentMap++;
@@ -129,6 +142,7 @@ public class MapLoader
             return null;
         }
     }
+    
 
 
     private TileMap loadMap(String filename)
@@ -197,7 +211,6 @@ public class MapLoader
 
         return newMap;
     }
-
 
     private void addSprite(TileMap map,
         Sprite hostSprite, int tileX, int tileY)
@@ -298,8 +311,9 @@ public class MapLoader
         
         playerAnim[0] = createPlayerAnim (images[0][0],images[0][1],images[0][2],images[0][3],images[0][4],images[0][5],images[0][6],images[0][7],images[0][8],images[0][9],images[0][10],images[0][11],images[0][12],images[0][13],images[0][14],images[0][15]);
         playerAnim[1] = createPlayerAnim (images[1][0],images[1][1],images[1][2],images[1][3],images[1][4],images[1][5],images[1][6],images[1][7],images[1][8],images[1][9],images[1][10],images[1][11],images[1][12],images[1][13],images[1][14],images[1][15]);
-         playerAnim[2] = createPlayerAnim2 (images[2][0]);
-        playerAnim[3] = createPlayerAnim2 (images[3][0]);
+        playerAnim[2] = createPlayerAnim2 (loadImage("dead.gif"));
+        playerAnim[3] = playerAnim[2];
+        
         
         
         for (int i=0; i<4; i++) 
@@ -307,6 +321,7 @@ public class MapLoader
             flyAnim[i] = createFlyAnim (images[i][16], images[i][17], images[i][18]);
             grubAnim[i] = createGrubAnim (images[i][19], images[i][20]);
         }
+        	  
 
         // create creature sprites
         playerSprite = new Player (playerAnim[0], playerAnim[1],playerAnim[2], playerAnim[3]);
@@ -378,6 +393,11 @@ public class MapLoader
         Animation anim = new Animation();
         anim.addFrame(loadImage("heart.png"), 150);
         goalSprite = new PowerUp.Goal(anim);
+        
+     
+        
+        
+        
 
         // create "star" sprite
         anim = new Animation();
@@ -393,9 +413,10 @@ public class MapLoader
         anim.addFrame(loadImage("music1.png"), 150);
         anim.addFrame(loadImage("music2.png"), 150);
         anim.addFrame(loadImage("music3.png"), 150);
-        anim.addFrame(loadImage("music2.png"), 150);
+        anim.addFrame(loadImage("music4.png"), 150);
         musicSprite = new PowerUp.Music(anim);
-        musicSprite=new PowerUp.Music(anim);
+        
+      
     }
 
 }

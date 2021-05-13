@@ -2,8 +2,11 @@ package com.TETOSOFT.tilegame;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Random;
+
+import javax.sound.sampled.FloatControl;
 
 import com.TETOSOFT.graphics.*;
 import com.TETOSOFT.input.*;
@@ -28,10 +31,10 @@ public class GameEngine extends GameCore
     private MapLoader mapLoader;
     private InputManager inputManager;
     private TileMapDrawer drawer;
-    
     private GameAction moveLeft;
     private GameAction moveRight;
     private GameAction jump;
+    private Sound song = new Sound("music/music5.wav");
     private GameAction exit;
     private int collectedStars=0;
     private int numLives=6;
@@ -81,10 +84,11 @@ public class GameEngine extends GameCore
         
     }
     
+    public static boolean isJumping;
     
     private void checkInput(long elapsedTime) 
     {
-    	
+    	isJumping = false ;
         if (exit.isPressed()) {
             stop();
         }
@@ -102,7 +106,14 @@ public class GameEngine extends GameCore
             }
             if (jump.isPressed()) {
                 player.jump(false);
+                isJumping = true ;
+                Sound pwrup = new Sound("music/jump.wav");
+                FloatControl gainControl = (FloatControl) pwrup.getMyClip().getControl(FloatControl.Type.MASTER_GAIN);
+             	gainControl.setValue(gainControl.getMaximum());
+             	pwrup.play();
+             
             }
+            
             player.setVelocityX(velocityX);
         }
         
@@ -351,6 +362,12 @@ public class GameEngine extends GameCore
                 // player dies!
                 player.setState(Creature.STATE_DYING);
                 numLives--;
+                Sound pwrup = new Sound("music/gameover.wav");
+            	FloatControl gainControl = (FloatControl) pwrup.getMyClip().getControl(FloatControl.Type.MASTER_GAIN);
+            	gainControl.setValue(gainControl.getMaximum());
+            	pwrup.play();
+            	
+                
                 if(numLives==0) {
                     try {
                         Thread.sleep(3000);
@@ -371,22 +388,52 @@ public class GameEngine extends GameCore
     public void acquirePowerUp(PowerUp powerUp) {
         // remove it from the map
         map.removeSprite(powerUp);
+        song.play();
         
         if (powerUp instanceof PowerUp.Star) {
             // do something here, like give the player points
             collectedStars++;
             if(collectedStars==100) 
             {
-                numLives++;
+            	Sound pwrup = new Sound("music/powerup.wav");
+            	FloatControl gainControl = (FloatControl) pwrup.getMyClip().getControl(FloatControl.Type.MASTER_GAIN);
+            	gainControl.setValue(gainControl.getMaximum());
+            	pwrup.play();
+            	numLives++;
                 collectedStars=0;
+            }
+            else { Sound pwrup = new Sound("music/coin.wav");
+                FloatControl gainControl = (FloatControl) pwrup.getMyClip().getControl(FloatControl.Type.MASTER_GAIN);
+             	gainControl.setValue(gainControl.getMaximum());
+             	pwrup.play();
+
+            	
             }
             
         } else if (powerUp instanceof PowerUp.Music) {
-            // change the music
-            
+        	ArrayList<String> songs = new ArrayList<String>(); 
+			songs.add("music/music1.wav");	  
+			songs.add("music/music5.wav");	
+			songs.add("music/music2.wav");	
+			
+        	Random rn = new Random();
+        	int rand = rn.nextInt(3);System.out.println(rand);
+        	song.stop();
+        	song = new Sound(songs.get(rand));
+        	FloatControl gainControl = (FloatControl) song.getMyClip().getControl(FloatControl.Type.MASTER_GAIN);
+
+			double gain = 0.25; 
+			float dB = (float) (Math.log(gain) / Math.log(10.0) * 20.0);
+			gainControl.setValue(dB);
+        	System.out.println(gainControl.getValue());
+        	song.loop();
+        	
         } else if (powerUp instanceof PowerUp.Goal) {
             // advance to next map      
-      
+        	Sound pwrup = new Sound("music/stage_clear.wav");
+            FloatControl gainControl = (FloatControl) pwrup.getMyClip().getControl(FloatControl.Type.MASTER_GAIN);
+         	gainControl.setValue(gainControl.getMaximum());
+         	pwrup.play();
             map = mapLoader.loadNextMap();
             
         }
