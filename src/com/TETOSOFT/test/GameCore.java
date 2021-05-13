@@ -6,6 +6,8 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Window;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -13,6 +15,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 
 import com.TETOSOFT.graphics.ScreenManager;
 
@@ -41,6 +44,12 @@ public abstract class GameCore {
     protected ScreenManager screen;
     private File highscorefile=new File("highscore.txt");
     private int[] highscorelist= {-1,-2,-3,-4,-5};
+    
+    
+    protected JButton bt1;
+    protected JButton bt2;
+    protected  JButton bt3;
+    protected  JButton bt4;
     
     
      
@@ -143,7 +152,14 @@ public abstract class GameCore {
     	}
     }
     
-    public void UpdateHighScoreList( int Score) {
+    /**
+     * this method updates HighScores file if the score is sup then the minimum of Highscore_Table
+     * @param Score :is the player score at the end of the game
+     * **/
+    
+    public boolean UpdateHighScoreList( int Score) {
+    	
+    	boolean ishighscore=false;
     	
     	try {
 			FileInputStream fis=new FileInputStream(highscorefile);
@@ -151,36 +167,40 @@ public abstract class GameCore {
 			
 			highscorelist=(int[])ois.readObject();
 			int min=highscorelist[0];
-			int i;
+			int i,j=0;
+			
 			
 			 if(!scorexists(Score)) {
-				 
 				 
 					 for (i=0; i < highscorelist.length; i++) {
 						if(highscorelist[i]<min) {
 							min=highscorelist[i];
-							break;
+							j=i;
 						}
 					}
-					 System.out.println("i: "+i);
-				 if(i<highscorelist.length &&  highscorelist[i]<Score) highscorelist[i]=Score;
-				 else if( highscorelist[0]<Score) highscorelist[0]=Score;
+					 System.out.println("i: "+j);
+				 if(j<highscorelist.length &&  highscorelist[j]<Score) {
+					 highscorelist[j]=Score;
+					ishighscore=true;
+				 }
+				 else if( highscorelist[0]<Score) {
+					 highscorelist[0]=Score;
+					 ishighscore=true;
+				 }
 				 
 			 }
 			 for (i=0; i < highscorelist.length; i++) {
 					System.out.println(highscorelist[i]);
 				}
 			 
-			 
-			
-			 
-			 
 			 FileOutputStream fos=new FileOutputStream(highscorefile);
 				ObjectOutputStream oos=new ObjectOutputStream(fos);
 				oos.writeObject(highscorelist);
 				
+				return ishighscore;
+				
 		}
-    	catch (Exception e) {	e.printStackTrace();}
+    	catch (Exception e) {	e.printStackTrace();return ishighscore; }
     }
     
     private boolean scorexists(int number) {
@@ -220,6 +240,7 @@ public abstract class GameCore {
            
             draw(g);
             g.dispose();
+            
             if(!ispause)   screen.update();
             
             

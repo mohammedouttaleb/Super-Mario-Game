@@ -19,7 +19,7 @@ import com.TETOSOFT.input.*;
 import com.TETOSOFT.test.GameCore;
 import com.TETOSOFT.tilegame.sprites.*;
 
-import javafx.scene.layout.StackPane;
+
 
 /**
  * GameManager manages all parts of the game.
@@ -46,7 +46,8 @@ public class GameEngine extends GameCore
     private GameAction exit;
     private GameAction pause;
     private boolean firstpause=true;
-    
+    private boolean GameOver=false;
+    private boolean IsHighScore=false;
     private int collectedStars=0;
     //number of badguys killed
     private int CreaturesKilled=0;
@@ -62,10 +63,7 @@ public class GameEngine extends GameCore
     
     
     
-    JButton bt1;
-    JButton bt2;
-    JButton bt3;
-    JButton bt4;
+    
    
     public void init()
     {
@@ -135,8 +133,10 @@ public class GameEngine extends GameCore
             if(pause.isPressed()) {
             	System.err.println("pause is pressed");
             	pauseGame();
-            	return;
+            	//return;
             }
+            if(!ispause) {
+            	
             
             if (moveLeft.isPressed()) 
             {
@@ -147,6 +147,7 @@ public class GameEngine extends GameCore
             }
             if (jump.isPressed()) {
                 player.jump(false);
+            }
             }
             player.setVelocityX(velocityX);
         
@@ -159,47 +160,57 @@ public class GameEngine extends GameCore
     	
     	JFrame mainframe=this.screen.getFullScreenWindow();
     	JPanel mainpanel=(JPanel)mainframe.getContentPane();
-    	JPanel pausepanel=new JPanel();
+    	//JPanel pausepanel=new JPanel();
+    	
     	/** this part of code displays the pause message in the screen */
         if(ispause) {
             
         	
         	    
-            //pausepanel.setLayout(new BoxLayout(pausepanel,BoxLayout.Y_AXIS)); 
-            pausepanel.setLayout(new FlowLayout());
-        	pausepanel.setBackground(new Color(0).white);
+
+            mainpanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+             bt1=new JButton("Resume");
+             bt2=new JButton("High Scores");
+             bt3=new JButton("Music");
+             bt4=new JButton("Quit");
              
-            mainpanel.setLayout(new CardLayout(30,40));
-            
-             JButton bt1=new JButton("Resume");
-             JButton bt2=new JButton("High Scores");
-             JButton bt3=new JButton("Music");
-             JButton bt4=new JButton("Quit");
+             if(ispause) {
+             	bt4.addActionListener(new ActionListener() { 
+               	  public void actionPerformed(ActionEvent e) { 
+               		  System.out.println("quit selected");
+               		    stop();
+               		  } 
+               		} );
+             	bt1.addActionListener(new ActionListener() { 
+                 	  public void actionPerformed(ActionEvent e) { 
+                 		  System.out.println("resume selected");
+                 		    pause.press();
+                 		   
+                 		  } 
+                 		} );
+             	
+             }
              
-             bt1.addActionListener(new ActionListener() { 
-            	  public void actionPerformed(ActionEvent e) { 
-            		  System.out.println("quit selected");
-            		    stop();
-            		  } 
-            		} );
              
+             
+              if(firstpause) {
+            	  mainpanel.add(bt1);
+            	  mainpanel.add(bt2);
+            	  mainpanel.add(bt3);
+            	  mainpanel.add(bt4);
+               firstpause=false;
+              }
+       
+              mainpanel.setBackground(Color.BLACK);
+              mainpanel.setVisible(true);
               
-            	  pausepanel.add(bt1);
-            	  pausepanel.add(bt2);
-            	  pausepanel.add(bt3);
-            	  pausepanel.add(bt4);
-              
-            
-          
-        	   mainpanel.add(pausepanel);
-              mainframe.setVisible(true);
-             
             
             
             
         }
         else {
-        	//mainpanel.setVisible(false);
+        	mainpanel.setVisible(false);
+        	mainpanel.setLayout(null);
         	//mainpanel=null;
         
         drawer.draw(g, map, screen.getWidth(), screen.getHeight());
@@ -217,6 +228,22 @@ public class GameEngine extends GameCore
         else time=(int)elapsedtime/1000+" sec";
         g.setColor(Color.YELLOW);
         g.drawString("Time: "+time,10.0f,20.0f);
+        
+        if(GameOver) {
+        	//System.out.println("dkhell");
+        	g.setColor(Color.RED);
+        	g.setFont(new Font("Arial", Font.BOLD,35));
+            g.drawString("Game Over",220.0f,180.0f);
+            if(!IsHighScore) {
+            g.setColor(Color.RED);
+            g.drawString("Your score: "+Score,220.0f,240.0f);
+            }
+            else {
+            	g.setColor(Color.GREEN);
+                g.drawImage(mapLoader.loadImage("Nrecord.jpg"), 230, 220, null);
+            	g.drawString("New HighScore score: "+Score,200.0f,360.0f);
+            }
+        }
         
         
         }   
@@ -455,11 +482,11 @@ public class GameEngine extends GameCore
         } else if (collisionSprite instanceof Creature) {
             Creature badguy = (Creature)collisionSprite;
             if( badguy instanceof Fly ) {
-            	System.out.println("9atele faracha");
+            	//System.out.println("9atele faracha");
             	this.CreatureCoefficient=150;
             }
             else if(badguy instanceof Grub) {
-            	System.out.println("9atele doudaa");
+            	//System.out.println("9atele doudaa");
             	this.CreatureCoefficient=100;
             }
             if (canKill) {
@@ -475,17 +502,56 @@ public class GameEngine extends GameCore
                 player.setState(Creature.STATE_DYING);
                 numLives--;
                 if(numLives==0) {
-                    try {
+                	GameOver=true;
+                	IsHighScore=UpdateHighScoreList(Score);
+                	System.out.println(IsHighScore);
+                	draw(screen.getGraphics());
+                	screen.update();
+                    /*try {
                         Thread.sleep(3000);
                     } catch (InterruptedException ex) {
                         ex.printStackTrace();
-                    }
-                    stop();
-                    UpdateHighScoreList(Score);
+                    }*/
+                    
+                    
+                    try {
+            			Thread.sleep(1000);
+            		} catch (InterruptedException e) {	e.printStackTrace(); }
+                	finally {
+                		 stop();
+					}
+                   
+                    
+                    
+                    
                 }
             }
         }
     }
+    
+   /* private void DisplayHighscoreFrame() {
+    	System.out.println("inside display");
+    	 JFrame highscoreframe=new JFrame();
+     	JPanel highscorepanel=(JPanel)highscoreframe.getContentPane();
+     	highscoreframe.setSize(300,300);
+ 		highscoreframe.setLocationRelativeTo(null);
+     	highscoreframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+     	highscorepanel.setLayout(new BorderLayout());
+     	Label highscoretxt=new Label("Ur score is : "+Score);
+     	highscorepanel.add(highscoretxt);
+     	highscoreframe.setVisible(true);
+    	
+    	try {
+			Thread.sleep(10000);
+		} catch (InterruptedException e) { 	e.printStackTrace();}
+        finally{
+            highscoreframe.setVisible(false);
+            stop();
+        }
+    	
+    	
+    }*/
+  
     
     
     /**
