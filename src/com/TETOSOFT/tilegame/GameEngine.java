@@ -73,7 +73,10 @@ public class GameEngine extends GameCore
         inputManager.setCursor(InputManager.INVISIBLE_CURSOR);
         
         inputManager.mapToKey(moveLeft, KeyEvent.VK_LEFT);
+        inputManager.mapToKey(moveLeft, KeyEvent.VK_A);
         inputManager.mapToKey(moveRight, KeyEvent.VK_RIGHT);
+        inputManager.mapToKey(moveRight, KeyEvent.VK_D);
+        inputManager.mapToKey(jump, KeyEvent.VK_W);
         inputManager.mapToKey(jump, KeyEvent.VK_SPACE);
         inputManager.mapToKey(exit, KeyEvent.VK_ESCAPE);
     }
