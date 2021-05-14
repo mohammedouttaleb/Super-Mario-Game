@@ -46,10 +46,7 @@ public abstract class GameCore {
     private int[] highscorelist= {-1,-2,-3,-4,-5};
     
     
-    protected JButton bt1;
-    protected JButton bt2;
-    protected  JButton bt3;
-    protected  JButton bt4;
+   
     
     
      
@@ -241,7 +238,7 @@ public abstract class GameCore {
             draw(g);
             g.dispose();
             
-            if(!ispause)   screen.update();
+             screen.update();
             
             
 

@@ -45,7 +45,6 @@ public class GameEngine extends GameCore
     private GameAction jump;
     private GameAction exit;
     private GameAction pause;
-    private boolean firstpause=true;
     private boolean GameOver=false;
     private boolean IsHighScore=false;
     private int collectedStars=0;
@@ -111,7 +110,7 @@ public class GameEngine extends GameCore
         inputManager.mapToKey(moveLeft, KeyEvent.VK_LEFT);
         inputManager.mapToKey(moveRight, KeyEvent.VK_RIGHT);
         inputManager.mapToKey(jump, KeyEvent.VK_SPACE);
-        inputManager.mapToKey(exit, KeyEvent.VK_ESCAPE);
+        inputManager.mapToKey(exit, KeyEvent.VK_Q);
         inputManager.mapToKey(pause, KeyEvent.VK_P);
         
     }
@@ -133,9 +132,9 @@ public class GameEngine extends GameCore
             if(pause.isPressed()) {
             	System.err.println("pause is pressed");
             	pauseGame();
-            	//return;
+            	return;
             }
-            if(!ispause) {
+            
             	
             
             if (moveLeft.isPressed()) 
@@ -148,7 +147,7 @@ public class GameEngine extends GameCore
             if (jump.isPressed()) {
                 player.jump(false);
             }
-            }
+            
             player.setVelocityX(velocityX);
         
         }
@@ -157,61 +156,7 @@ public class GameEngine extends GameCore
     
     
     public void draw(Graphics2D g) {
-    	
-    	JFrame mainframe=this.screen.getFullScreenWindow();
-    	JPanel mainpanel=(JPanel)mainframe.getContentPane();
-    	//JPanel pausepanel=new JPanel();
-    	
-    	/** this part of code displays the pause message in the screen */
-        if(ispause) {
-            
-        	
-        	    
-
-            mainpanel.setLayout(new FlowLayout(FlowLayout.CENTER));
-             bt1=new JButton("Resume");
-             bt2=new JButton("High Scores");
-             bt3=new JButton("Music");
-             bt4=new JButton("Quit");
-             
-             if(ispause) {
-             	bt4.addActionListener(new ActionListener() { 
-               	  public void actionPerformed(ActionEvent e) { 
-               		  System.out.println("quit selected");
-               		    stop();
-               		  } 
-               		} );
-             	bt1.addActionListener(new ActionListener() { 
-                 	  public void actionPerformed(ActionEvent e) { 
-                 		  System.out.println("resume selected");
-                 		    pause.press();
-                 		   
-                 		  } 
-                 		} );
-             	
-             }
-             
-             
-             
-              if(firstpause) {
-            	  mainpanel.add(bt1);
-            	  mainpanel.add(bt2);
-            	  mainpanel.add(bt3);
-            	  mainpanel.add(bt4);
-               firstpause=false;
-              }
-       
-              mainpanel.setBackground(Color.BLACK);
-              mainpanel.setVisible(true);
-              
-            
-            
-            
-        }
-        else {
-        	mainpanel.setVisible(false);
-        	mainpanel.setLayout(null);
-        	//mainpanel=null;
+        
         
         drawer.draw(g, map, screen.getWidth(), screen.getHeight());
         
@@ -229,8 +174,19 @@ public class GameEngine extends GameCore
         g.setColor(Color.YELLOW);
         g.drawString("Time: "+time,10.0f,20.0f);
         
+        if(ispause) {
+        	g.setColor(Color.WHITE);
+        	g.drawString("Pause/Resume : Press 'P'",200.0f,235.0f);
+        	g.drawString("Quit : Press 'Q'",200.0f,265.0f);
+        	g.drawString("Music ON/OFF : Press 'M'",200.0f,295.0f);
+        	g.drawString("!!!!!!!!!!!!!!!!!!!!!!!!",200.0f,325.0f);
+        	g.setColor(Color.RED);
+        	g.setFont(new Font("Arial",Font.BOLD,40));
+            g.drawString("Game Paused",180.0f,180.0f);
+        }
+        
         if(GameOver) {
-        	//System.out.println("dkhell");
+        	
         	g.setColor(Color.RED);
         	g.setFont(new Font("Arial", Font.BOLD,35));
             g.drawString("Game Over",220.0f,180.0f);
@@ -247,7 +203,7 @@ public class GameEngine extends GameCore
         
         
         }   
-    }
+    
     
     /**this method count the score of the player thanks to this formula  10%time+20%coins+70%creatures-killed */
     private long UpdateScore( int Startsnbr) {
