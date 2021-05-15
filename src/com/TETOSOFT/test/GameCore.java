@@ -18,6 +18,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
 import com.TETOSOFT.graphics.ScreenManager;
+import com.TETOSOFT.tilegame.GameEngine;
+import com.TETOSOFT.tilegame.GameoverMenu;
 
 /**
     Simple abstract class used for testing. Subclasses should
@@ -74,11 +76,23 @@ public abstract class GameCore {
     */
     public void run() {
         try {
-        	highScoreConfig();
-            init();
-            gameLoop();
-        }
-        finally {
+
+                highScoreConfig();
+                init();
+                gameLoop();
+                System.out.println(GameoverMenu.isRestart);
+                if (GameoverMenu.isRestart.get()){
+                    GameoverMenu.isRestart.lazySet(false);
+                    //System.out.println("rddinaha :  " + GameoverMenu.isRestart.get());
+
+                    screen.frame.dispose();
+                    GameEngine gameEngine = new GameEngine();
+                    gameEngine.run();
+
+
+
+                }
+        } finally {
             screen.restoreScreen();
             lazilyExit();
         }
@@ -93,6 +107,7 @@ public abstract class GameCore {
         if the Java Sound system is running.
     */
     public void lazilyExit() {
+
         Thread thread = new Thread() {
             public void run() {
                 // first, wait for the VM exit on its own.
@@ -237,7 +252,8 @@ public abstract class GameCore {
            
             draw(g);
             g.dispose();
-            
+            /** make a nap while game over menu, to stop from refreshing **/
+
              screen.update();
             
             

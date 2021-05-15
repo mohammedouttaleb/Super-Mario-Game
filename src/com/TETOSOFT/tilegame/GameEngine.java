@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
 
 import javax.swing.BoxLayout;
@@ -24,12 +25,13 @@ import com.TETOSOFT.tilegame.sprites.*;
 /**
  * GameManager manages all parts of the game.
  */
-public class GameEngine extends GameCore 
+public class GameEngine extends GameCore
 {
     
     public static void main(String[] args) 
     {
-        new GameEngine().run();
+            new GameEngine().run();
+
     }
     
     public static final float GRAVITY = 0.002f;
@@ -58,12 +60,9 @@ public class GameEngine extends GameCore
     private int Score=0;
     
     private int numLives=2;
-    
-    
-    
-    
-    
-   
+
+
+
     public void init()
     {
         super.init();
@@ -183,10 +182,21 @@ public class GameEngine extends GameCore
         	g.setColor(Color.RED);
         	g.setFont(new Font("Arial",Font.BOLD,40));
             g.drawString("Game Paused",180.0f,180.0f);
+
+
+            GameoverMenu menu=new GameoverMenu(this, IsHighScore, screen, Score, 0);
+            menu.update();
+            /*screen.frame.add(panel.mainPanel);
+            screen.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            screen.frame.update(screen.getGraphics());*/
+
+
+            // comment this screen.frame.getContentPane().remove(panel);
+
         }
         
         if(GameOver) {
-        	
+
         	g.setColor(Color.RED);
         	g.setFont(new Font("Arial", Font.BOLD,35));
             g.drawString("Game Over",220.0f,180.0f);
@@ -199,9 +209,32 @@ public class GameEngine extends GameCore
                 g.drawImage(mapLoader.loadImage("Nrecord.jpg"), 230, 220, null);
             	g.drawString("New HighScore score: "+Score,200.0f,360.0f);
             }
+
+
+            JPanel panel=new JPanel();
+            panel.setBounds(40,80,screen.getWidth(),screen.getHeight());
+            panel.setBackground(Color.gray);
+            JButton b1=new JButton("Button 1");
+            b1.setBounds(50,100,80,30);
+            b1.setBackground(Color.yellow);
+            JButton b2=new JButton("Button 2");
+            b2.setBounds(100,100,80,30);
+            b2.setBackground(Color.green);
+            panel.add(b1); panel.add(b2);
+            screen.frame.add(panel);
+
+
+
+            screen.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+            screen.frame.update(screen.getGraphics());
+
+
+
+
         }
         
-        
+
         }   
     
     
