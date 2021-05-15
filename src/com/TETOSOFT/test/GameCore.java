@@ -36,6 +36,7 @@ public abstract class GameCore {
         new DisplayMode(1024, 768, 16, 0),
         new DisplayMode(1024, 768, 32, 0),
         new DisplayMode(1024, 768, 24, 0),
+		new DisplayMode(1920, 1080, 32, 0)
     };
 
     private boolean isRunning;
@@ -79,8 +80,6 @@ public abstract class GameCore {
                 System.err.println(GameoverMenu.isRestart);
                 if (GameoverMenu.isRestart.get()){
                     GameoverMenu.isRestart.lazySet(false);
-                    //System.out.println("rddinaha :  " + GameoverMenu.isRestart.get());
-
                     screen.frame.dispose();
                     GameEngine gameEngine = new GameEngine();
                     gameEngine.run();
@@ -250,7 +249,7 @@ public abstract class GameCore {
            
             draw(g);
             g.dispose();
-            /** make a nap while game over menu, to stop from refreshing **/
+
 
 
             screen.update();

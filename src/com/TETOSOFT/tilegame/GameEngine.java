@@ -186,16 +186,6 @@ public class GameEngine extends GameCore
             g.drawString("Game Paused",180.0f,180.0f);
 
 
-/*            GameoverMenu menu=new GameoverMenu(this, IsHighScore, screen, Score, 0);
-            menu.update();
-            setMenu();*/
-            /*screen.frame.add(panel.mainPanel);
-            screen.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            screen.frame.update(screen.getGraphics());*/
-
-
-            // comment this screen.frame.getContentPane().remove(panel);
-
         }
         
         if(GameOver) {
@@ -502,32 +492,7 @@ public class GameEngine extends GameCore
             }
         }
     }
-    
-   /* private void DisplayHighscoreFrame() {
-    	System.out.println("inside display");
-    	 JFrame highscoreframe=new JFrame();
-     	JPanel highscorepanel=(JPanel)highscoreframe.getContentPane();
-     	highscoreframe.setSize(300,300);
- 		highscoreframe.setLocationRelativeTo(null);
-     	highscoreframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-     	highscorepanel.setLayout(new BorderLayout());
-     	Label highscoretxt=new Label("Ur score is : "+Score);
-     	highscorepanel.add(highscoretxt);
-     	highscoreframe.setVisible(true);
-    	
-    	try {
-			Thread.sleep(10000);
-		} catch (InterruptedException e) { 	e.printStackTrace();}
-        finally{
-            highscoreframe.setVisible(false);
-            stop();
-        }
-    	
-    	
-    }*/
-  
-    
-    
+
     /**
      * Gives the player the speicifed power up and removes it
      * from the map.
@@ -552,7 +517,7 @@ public class GameEngine extends GameCore
             // advance to next map      
       
             map = mapLoader.loadNextMap();
-            
+            System.out.println("level u");
         }
     }
     
