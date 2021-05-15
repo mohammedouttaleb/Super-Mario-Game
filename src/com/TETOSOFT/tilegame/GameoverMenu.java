@@ -10,6 +10,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class GameoverMenu extends JPanel {
     public static AtomicBoolean isRestart = new AtomicBoolean(false);
+    public static boolean isGameoverMenu = false;
+
     private JButton restart;
     public JPanel mainPanel;
     private JButton giveUp;
@@ -26,7 +28,7 @@ public class GameoverMenu extends JPanel {
         this.game = game;
         this.screen = screen;
 
-
+        isGameoverMenu = true;
         //isRestart = false;
 
         gameOver.setForeground(Color.red);
@@ -70,10 +72,11 @@ public class GameoverMenu extends JPanel {
                         boolean existingValue = isRestart.get();
                         boolean newValue = true;
                         if(isRestart.compareAndSet(existingValue, newValue)) {
-                            System.out.println("rddinaha newValue " + isRestart.get());
+                            System.err.println("rddinaha newValue " + isRestart.get());
                             break;
                     }
                 }
+                isGameoverMenu = false;
                 close();
                 game.stop();
             }
@@ -83,7 +86,9 @@ public class GameoverMenu extends JPanel {
         giveUp.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                isGameoverMenu = false;
                 close();
+                game.stop();
 
             }
         });

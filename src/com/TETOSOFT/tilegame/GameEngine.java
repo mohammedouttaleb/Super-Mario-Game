@@ -33,7 +33,8 @@ public class GameEngine extends GameCore
             new GameEngine().run();
 
     }
-    
+
+
     public static final float GRAVITY = 0.002f;
     private Font police=new Font("Arial",Font.PLAIN,18);
     private Point pointCache = new Point();
@@ -94,6 +95,7 @@ public class GameEngine extends GameCore
     public void pauseGame() {
     	super.pauseGame();
     }
+
     
     
     private void initInput() {
@@ -184,8 +186,9 @@ public class GameEngine extends GameCore
             g.drawString("Game Paused",180.0f,180.0f);
 
 
-            GameoverMenu menu=new GameoverMenu(this, IsHighScore, screen, Score, 0);
+/*            GameoverMenu menu=new GameoverMenu(this, IsHighScore, screen, Score, 0);
             menu.update();
+            setMenu();*/
             /*screen.frame.add(panel.mainPanel);
             screen.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             screen.frame.update(screen.getGraphics());*/
@@ -210,28 +213,8 @@ public class GameEngine extends GameCore
             	g.drawString("New HighScore score: "+Score,200.0f,360.0f);
             }
 
-
-            JPanel panel=new JPanel();
-            panel.setBounds(40,80,screen.getWidth(),screen.getHeight());
-            panel.setBackground(Color.gray);
-            JButton b1=new JButton("Button 1");
-            b1.setBounds(50,100,80,30);
-            b1.setBackground(Color.yellow);
-            JButton b2=new JButton("Button 2");
-            b2.setBounds(100,100,80,30);
-            b2.setBackground(Color.green);
-            panel.add(b1); panel.add(b2);
-            screen.frame.add(panel);
-
-
-
-            screen.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-            screen.frame.update(screen.getGraphics());
-
-
-
-
+            GameoverMenu menu=new GameoverMenu(this, IsHighScore, screen, Score, mapLoader.currentMap);
+            menu.update();
         }
         
 
@@ -496,6 +479,8 @@ public class GameEngine extends GameCore
                 	System.out.println(IsHighScore);
                 	draw(screen.getGraphics());
                 	screen.update();
+
+
                     /*try {
                         Thread.sleep(3000);
                     } catch (InterruptedException ex) {
@@ -503,13 +488,13 @@ public class GameEngine extends GameCore
                     }*/
                     
                     
-                    try {
-            			Thread.sleep(1000);
+  /*                  try {
+            			Thread.sleep(100000);
             		} catch (InterruptedException e) {	e.printStackTrace(); }
                 	finally {
-                		 stop();
+                		 //stop();
 					}
-                   
+                   */
                     
                     
                     

@@ -6,8 +6,6 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Window;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -15,7 +13,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 
 import com.TETOSOFT.graphics.ScreenManager;
 import com.TETOSOFT.tilegame.GameEngine;
@@ -66,9 +63,8 @@ public abstract class GameCore {
      * */
     public void pauseGame() {
     	ispause= !ispause;
-    	
-    	
     }
+
 
 
     /**
@@ -80,7 +76,7 @@ public abstract class GameCore {
                 highScoreConfig();
                 init();
                 gameLoop();
-                System.out.println(GameoverMenu.isRestart);
+                System.err.println(GameoverMenu.isRestart);
                 if (GameoverMenu.isRestart.get()){
                     GameoverMenu.isRestart.lazySet(false);
                     //System.out.println("rddinaha :  " + GameoverMenu.isRestart.get());
@@ -88,8 +84,6 @@ public abstract class GameCore {
                     screen.frame.dispose();
                     GameEngine gameEngine = new GameEngine();
                     gameEngine.run();
-
-
 
                 }
         } finally {
@@ -241,8 +235,12 @@ public abstract class GameCore {
             long elapsedTime =
                 System.currentTimeMillis() - currTime;
             currTime += elapsedTime;
-            
-            
+
+            if(GameoverMenu.isGameoverMenu)
+            {
+                System.err.println(GameoverMenu.isGameoverMenu);
+                continue;
+            }
 
             // update
             update(elapsedTime);
@@ -254,16 +252,13 @@ public abstract class GameCore {
             g.dispose();
             /** make a nap while game over menu, to stop from refreshing **/
 
-             screen.update();
-            
-            
 
-            // don't take a nap! run as fast as possible
-            /*try {
-                Thread.sleep(20);
-            }
-            catch (InterruptedException ex) { }*/
+            screen.update();
+
         }
+        GameoverMenu.isGameoverMenu = false;
+
+
     }
 
 
