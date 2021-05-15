@@ -3,6 +3,7 @@ package com.TETOSOFT.test;
 import java.awt.*;
 import javax.swing.ImageIcon;
 
+
 import com.TETOSOFT.graphics.ScreenManager;
 
 /**
@@ -26,7 +27,11 @@ public abstract class GameCore {
     };
 
     private boolean isRunning;
+    private boolean hasStarted;
     protected ScreenManager screen;
+    
+
+
 
 
     /**
@@ -34,6 +39,10 @@ public abstract class GameCore {
     */
     public void stop() {
         isRunning = false;
+    }
+
+    public void stopStarted(){
+        hasStarted = true;
     }
 
 
@@ -90,8 +99,10 @@ public abstract class GameCore {
         window.setFont(new Font("Dialog", Font.PLAIN, FONT_SIZE));
         window.setBackground(Color.BLACK);
         window.setForeground(Color.WHITE);
+        
 
         isRunning = true;
+        hasStarted = false;
     }
 
 
@@ -106,6 +117,14 @@ public abstract class GameCore {
     public void gameLoop() {
         long startTime = System.currentTimeMillis();
         long currTime = startTime;
+
+        while(!hasStarted){
+            Graphics2D g = screen.getGraphics();
+            firstDraw(g);
+            g.dispose();
+            screen.update();
+            checkStarted();
+        }
 
         while (isRunning) {
             long elapsedTime =
@@ -144,4 +163,6 @@ public abstract class GameCore {
         method.
     */
     public abstract void draw(Graphics2D g);
+    public abstract void firstDraw(Graphics2D g);
+    public abstract void checkStarted();
 }
