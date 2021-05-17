@@ -17,9 +17,9 @@ public class GameEngine extends GameCore
     
     public static void main(String[] args) 
     {
-        new GameEngine().run();
+        new GameEngine().run(); 
     }
-    
+     
     public static final float GRAVITY = 0.002f;
     
     private Point pointCache = new Point();
@@ -32,6 +32,7 @@ public class GameEngine extends GameCore
     private GameAction moveRight;
     private GameAction jump;
     private GameAction exit;
+    private GameAction windowedOrFull;
     private int collectedStars=0;
     private int numLives=6;
    
@@ -79,11 +80,13 @@ public class GameEngine extends GameCore
         inputManager.mapToKey(jump, KeyEvent.VK_W);
         inputManager.mapToKey(jump, KeyEvent.VK_SPACE);
         inputManager.mapToKey(exit, KeyEvent.VK_ESCAPE);
+        
     }
     
     
     private void checkInput(long elapsedTime) 
     {
+    	
         
         if (exit.isPressed()) {
             stop();

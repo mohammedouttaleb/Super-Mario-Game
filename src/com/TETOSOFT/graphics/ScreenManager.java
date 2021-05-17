@@ -25,7 +25,7 @@ public class ScreenManager
     }
 
 
-   
+    
     public DisplayMode findFirstCompatibleMode(DisplayMode modes[])
     {
         DisplayMode goodModes[] = device.getDisplayModes();
@@ -54,7 +54,13 @@ public class ScreenManager
         {
             return false;
         }
-
+		/*
+		 * //i added this if if(mode1.getWidth() == mode2.getWidth() &&
+		 * mode1.getHeight() == mode2.getHeight() && mode1.getBitDepth() ==
+		 * mode2.getBitDepth() && mode1.getRefreshRate() == mode2.getRefreshRate()) {
+		 * return true; }
+		 */
+        
         if (mode1.getBitDepth() != DisplayMode.BIT_DEPTH_MULTI &&
             mode2.getBitDepth() != DisplayMode.BIT_DEPTH_MULTI &&
             mode1.getBitDepth() != mode2.getBitDepth())
@@ -70,18 +76,19 @@ public class ScreenManager
          {
              return false;
          }
-
+        
          return true;
     }
 
 
     public void setFullScreen(DisplayMode displayMode) 
-    {
+    {   
         final JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setUndecorated(true);
-        frame.setIgnoreRepaint(true);
-        frame.setResizable(false);
+        frame.setUndecorated(false);
+        frame.setIgnoreRepaint(false);
+        frame.setResizable(true);
+        
 
         device.setFullScreenWindow(frame);
 
@@ -112,6 +119,7 @@ public class ScreenManager
         {
             // ignore
         }
+        
 
 
     }
