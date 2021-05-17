@@ -32,7 +32,6 @@ public class GameEngine extends GameCore
     private GameAction moveRight;
     private GameAction jump;
     private GameAction exit;
-    private GameAction windowedOrFull;
     private int collectedStars=0;
     private int numLives=6;
    
@@ -69,7 +68,7 @@ public class GameEngine extends GameCore
         moveRight = new GameAction("moveRight");
         jump = new GameAction("jump", GameAction.DETECT_INITAL_PRESS_ONLY);
         exit = new GameAction("exit",GameAction.DETECT_INITAL_PRESS_ONLY);
-        
+       
         inputManager = new InputManager(screen.getFullScreenWindow());
         inputManager.setCursor(InputManager.INVISIBLE_CURSOR);
         
@@ -87,7 +86,7 @@ public class GameEngine extends GameCore
     private void checkInput(long elapsedTime) 
     {
     	
-        
+    	
         if (exit.isPressed()) {
             stop();
         }
@@ -116,13 +115,13 @@ public class GameEngine extends GameCore
         
         drawer.draw(g, map, screen.getWidth(), screen.getHeight());
         g.setColor(Color.WHITE);
-        g.drawString("Press ESC for EXIT.",10.0f,20.0f);
+        g.drawString("Press ESC for EXIT.",10.0f,50.0f);
         g.setColor(Color.GREEN);
-        g.drawString("Coins: "+collectedStars,300.0f,20.0f);
+        g.drawString("Coins: "+collectedStars,300.0f,50.0f);
         g.setColor(Color.YELLOW);
-        g.drawString("Lives: "+(numLives),500.0f,20.0f );
+        g.drawString("Lives: "+(numLives),500.0f,50.0f );
         g.setColor(Color.WHITE);
-        g.drawString("Home: "+mapLoader.currentMap,700.0f,20.0f);
+        g.drawString("Home: "+mapLoader.currentMap,700.0f,50.0f);
         
     }
     
