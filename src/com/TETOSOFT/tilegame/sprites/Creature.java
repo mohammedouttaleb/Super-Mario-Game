@@ -55,7 +55,6 @@ public abstract class Creature extends Sprite {
             this.right = right;
             this.deadLeft = deadLeft;
             this.deadRight = deadRight;
-            this.jump = jump2;
             state = STATE_NORMAL;
         }
        
