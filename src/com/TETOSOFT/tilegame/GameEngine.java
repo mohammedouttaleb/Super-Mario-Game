@@ -32,9 +32,13 @@ public class GameEngine extends GameCore
     private GameAction moveRight;
     private GameAction start;
     private GameAction jump;
+    private GameAction instructions;
     private GameAction exit;
+    private GameAction back;
     private int collectedStars=0;
     private int numLives=6;
+
+    private boolean isInstruction = false;
    
     public void init()
     {
@@ -70,6 +74,8 @@ public class GameEngine extends GameCore
         start = new GameAction("start",GameAction.DETECT_INITAL_PRESS_ONLY);
         jump = new GameAction("jump", GameAction.DETECT_INITAL_PRESS_ONLY);
         exit = new GameAction("exit",GameAction.DETECT_INITAL_PRESS_ONLY);
+        instructions = new GameAction("instruction",GameAction.DETECT_INITAL_PRESS_ONLY);
+        back = new GameAction("Back",GameAction.DETECT_INITAL_PRESS_ONLY);
 
         
         inputManager = new InputManager(screen.getFullScreenWindow());
@@ -80,6 +86,8 @@ public class GameEngine extends GameCore
         inputManager.mapToKey(moveRight, KeyEvent.VK_RIGHT);
         inputManager.mapToKey(jump, KeyEvent.VK_SPACE);
         inputManager.mapToKey(exit, KeyEvent.VK_ESCAPE);
+        inputManager.mapToKey(instructions, KeyEvent.VK_I);
+        inputManager.mapToKey(back, KeyEvent.VK_M);
     }
     
     
@@ -112,7 +120,15 @@ public class GameEngine extends GameCore
     public void checkStarted() {
         if(start.isPressed()){
             super.stopStarted();
-            System.out.println("begin");
+        }
+        if(instructions.isPressed()){
+            isInstruction = true;
+        }
+        if(back.isPressed()){
+            isInstruction = false;
+        }
+        if(exit.isPressed()){
+            super.lazilyExit();
         }
     }
     
@@ -132,10 +148,35 @@ public class GameEngine extends GameCore
     }
 
     public void firstDraw(Graphics2D g) {
+        if(!isInstruction){
+            drawer.draw(g, map, screen.getWidth(), screen.getHeight());
+            g.setColor(Color.WHITE);
+            g.drawString("Press \'S\'  to start.",200.0f,150.0f);
+            g.setColor(Color.WHITE);
+            g.drawString("Press \'I\' for instructions.",200.0f,200.0f);
+            g.setColor(Color.WHITE);
+            g.drawString("Press ESC to Exit.",10.0f,20.0f);
+        }else{
+            drawer.draw(g, map, screen.getWidth(), screen.getHeight());
+            g.setColor(Color.WHITE);
+            g.drawString("These are the instructions :",20.0f,100.0f);
+            g.setColor(Color.WHITE);
+            g.drawString("Press \'M\' to go back",400.0f,20.0f);
+            g.setColor(Color.WHITE);
+            g.drawString("Press Space to jump.",100.0f,150.0f);
+            g.setColor(Color.WHITE);
+            g.drawString("Press the left arrow to move to the left",100.0f,200.0f);
+            g.setColor(Color.WHITE);
+            g.drawString("Press the Right arrow to move to the Right.",100.0f,250.0f);
+            g.setColor(Color.WHITE);
+            g.drawString("You'll get killed if the creatures collide with your sides or your head.",50.0f,330.0f);
+            g.setColor(Color.WHITE);
+            g.drawString("You can jump on top of the creatures to kill them.",50.0f,360.0f);
+            
+            
+        }
+
         
-        drawer.draw(g, map, screen.getWidth(), screen.getHeight());
-        g.setColor(Color.WHITE);
-        g.drawString("Press S to start.",250.0f,150.0f);
       
         
     }
