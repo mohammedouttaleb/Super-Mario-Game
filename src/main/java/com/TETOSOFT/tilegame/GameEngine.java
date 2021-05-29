@@ -59,7 +59,14 @@ public class GameEngine extends GameCore
     
     private int numLives=2;
     
-    
+    public void setCreatureCoefficient(int creatureCoefficient) {
+  		CreatureCoefficient = creatureCoefficient;
+  	}
+      
+      public void setElapsedtime(long elapsedtime) {
+  		this.elapsedtime = elapsedtime;
+  	}
+      
     
     
     
@@ -206,7 +213,7 @@ public class GameEngine extends GameCore
     
     
     /**this method count the score of the player thanks to this formula  10%time+20%coins+70%creatures-killed */
-    private long UpdateScore( int Startsnbr) {
+    public long UpdateScore( int Startsnbr) {
     	
     	Score+= (int)((0.1)*elapsedtime/1000 +0.2*Startsnbr+0.7*CreatureCoefficient)/10;
     	return  Score;
