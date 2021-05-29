@@ -22,7 +22,7 @@ import com.TETOSOFT.tilegame.sprites.*;
 
 
 /**
- * GameManager manages all parts of the game.
+ * GameManager manages all parts of the game.dsfdsd
  */
 public class GameEngine extends GameCore 
 {
