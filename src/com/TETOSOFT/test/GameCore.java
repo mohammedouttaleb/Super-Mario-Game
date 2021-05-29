@@ -200,9 +200,7 @@ public abstract class GameCore {
     	catch (Exception e) {	e.printStackTrace();return ishighscore; }
     }
     
-    /**this method checks If the score is a already in the highscoreList ******/
-    //i make it public to test it as well :)
-    public boolean scorexists(int number) {
+    private boolean scorexists(int number) {
     	for (int i = 0; i < highscorelist.length; i++) {
 			if(highscorelist[i]==number) {
 				return true;
