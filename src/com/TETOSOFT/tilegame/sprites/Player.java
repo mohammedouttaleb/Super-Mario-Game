@@ -9,7 +9,7 @@ public class Player extends Creature
 {
 
 
-    private static final float JUMP_SPEED = -.5f;
+    private static final float JUMP_SPEED = -.95f;
 
     private static float effectiveJumpSpeed = JUMP_SPEED;
     private static long jumpTimer = 1;
