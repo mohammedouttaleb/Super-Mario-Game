@@ -188,19 +188,20 @@ public class GameEngine extends GameCore
 
     
     public void draw(Graphics2D g) {
-        
 
+
+        System.out.println("we are here");
         drawer.draw(g, map, screen.getWidth(), screen.getHeight());
 
         g.setColor(Color.WHITE);
         g.drawString("Press ESC for EXIT.",10.0f,50.0f);
         g.setColor(Color.GREEN);
-        g.drawString("Score: "+Score,300.0f,20.0f);
+        g.drawString("Score: "+Score,300.0f,80.0f);
         g.drawString("Coins: "+collectedStars,300.0f,50.0f);
         g.setColor(Color.YELLOW);
-        g.drawString("Lives: "+(numLives),500.0f,20.0f );
+        g.drawString("Lives: "+(numLives),380.0f,50.0f );
         g.setColor(Color.WHITE);
-        g.drawString("Home: "+mapLoader.currentMap,700.0f,20.0f);
+        g.drawString("Home: "+mapLoader.currentMap,380.0f,80.0f);
         g.setFont(police);
         //g.drawString("Badguys killed: "+CreaturesKilled, 460, 25);
         String time="";
@@ -281,7 +282,7 @@ public class GameEngine extends GameCore
             g.setColor(Color.WHITE);
             g.drawString("These are the instructions :",20.0f,100.0f);
             g.setColor(Color.WHITE);
-            g.drawString("Press \'M\' to go back",400.0f,20.0f);
+            g.drawString("Press M to go back",400.0f,20.0f);
             g.setColor(Color.WHITE);
             g.drawString("Press Space to jump.",100.0f,150.0f);
             g.setColor(Color.WHITE);
@@ -544,23 +545,16 @@ public class GameEngine extends GameCore
                 player.setState(Creature.STATE_DYING);
                 numLives--;
                 if(numLives==0) {
-                	GameOver=true;
-                	IsHighScore=UpdateHighScoreList(Score);
-                	System.out.println(IsHighScore);
+                    GameOver = true;
+                    IsHighScore = UpdateHighScoreList(Score);
+                    System.out.println(IsHighScore);
 
                     System.out.println("level u");
 
-                	draw(screen.getGraphics());
-                	screen.update();
-
-
-                    /*try {
-                        Thread.sleep(3000);
-                    } catch (InterruptedException ex) {
-                        ex.printStackTrace();
-                    }
-                    stop();
+                    draw(screen.getGraphics());
+                    screen.update();
                 }
+
             }
         }
     }
@@ -570,24 +564,25 @@ public class GameEngine extends GameCore
      * Gives the player the speicifed power up and removes it
      * from the map.
      */
+
     public void acquirePowerUp(PowerUp powerUp) {
         // remove it from the map
         map.removeSprite(powerUp);
-        
+
         if (powerUp instanceof PowerUp.Star) {
             // do something here, like give the player points
             collectedStars++;
-            if(collectedStars==100) 
+            if(collectedStars==100)
             {
                 numLives++;
                 collectedStars=0;
             }
-            
+
         } else if (powerUp instanceof PowerUp.Music) {
             // change the music
-            
+
         } else if (powerUp instanceof PowerUp.Goal) {
-            // advance to next map      
+            // advance to next map
 
             System.out.println("level up");
             map = mapLoader.loadNextMap();
@@ -596,6 +591,5 @@ public class GameEngine extends GameCore
             pauseGame();
         }
     }
-    
       
 }
