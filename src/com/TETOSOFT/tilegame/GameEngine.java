@@ -1,19 +1,8 @@
 package com.TETOSOFT.tilegame;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
-
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.border.EmptyBorder;
 
 import com.TETOSOFT.graphics.*;
 import com.TETOSOFT.input.*;
