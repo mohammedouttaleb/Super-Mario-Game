@@ -4,12 +4,12 @@ import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.lang.reflect.InvocationTargetException;
-import javax.swing.JFrame;
+import javax.swing.*;
 
-public class ScreenManager 
+public class ScreenManager
 {
     private GraphicsDevice device;
-
+    public JFrame frame;
    
     public ScreenManager() 
     {
@@ -25,7 +25,7 @@ public class ScreenManager
     }
 
 
-   
+
     public DisplayMode findFirstCompatibleMode(DisplayMode modes[])
     {
         DisplayMode goodModes[] = device.getDisplayModes();
@@ -77,7 +77,7 @@ public class ScreenManager
 
     public void setFullScreen(DisplayMode displayMode) 
     {
-        final JFrame frame = new JFrame();
+        frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setUndecorated(true);
         frame.setIgnoreRepaint(true);

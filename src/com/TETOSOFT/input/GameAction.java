@@ -5,7 +5,7 @@ public class GameAction
 {
 
    
-    public static final int NORMAL = 0;
+    public static final int NORMAL = 0 ;
 
    
     public static final int DETECT_INITAL_PRESS_ONLY = 1;
