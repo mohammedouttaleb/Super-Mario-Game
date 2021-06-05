@@ -14,6 +14,7 @@ import java.io.ObjectOutputStream;
 
 import javax.swing.ImageIcon;
 
+
 import com.TETOSOFT.graphics.ScreenManager;
 import com.TETOSOFT.tilegame.GameEngine;
 import com.TETOSOFT.tilegame.GameoverMenu;
@@ -42,16 +43,21 @@ public abstract class GameCore {
     private boolean isRunning;
     protected boolean ispause=false;
     protected boolean islevelup = false;
+    private boolean hasStarted;
     protected ScreenManager screen;
     private File highscorefile=new File("highscore.txt");
     private int[] highscorelist= {-1,-2,-3,-4,-5};
-    
-    
-   
-    
-    
-     
-  
+
+
+
+
+
+
+
+
+
+
+
 
     /**
         Signals the game loop that it's time to quit
@@ -59,16 +65,20 @@ public abstract class GameCore {
     public void stop() {
         isRunning = false;
     }
-    
+
     /**
      * this method make pause to the game
      * */
     public void pauseGame() {
-    	ispause= !ispause;
-		if (islevelup && !ispause)
-			islevelup = false;
-
+        ispause = !ispause;
+        if (islevelup && !ispause)
+            islevelup = false;
     }
+    public void stopStarted(){
+        hasStarted = true;
+    }
+
+
 
 
 
@@ -136,13 +146,15 @@ public abstract class GameCore {
         window.setBackground(Color.BLACK);
         window.setForeground(Color.WHITE);
 
+
         isRunning = true;
+        hasStarted = false;
     }
-    
-    /*** this method creates the high score file if it does'nt exists and 
+
+    /*** this method creates the high score file if it does'nt exists and
          serialize the table of high scores into it*/
     private void highScoreConfig() {
-    	
+
     	if(!highscorefile.exists()) {
     		try {
 				highscorefile.createNewFile();
@@ -150,37 +162,37 @@ public abstract class GameCore {
 				ObjectOutputStream oos=new ObjectOutputStream(fos);
 				oos.writeObject(highscorelist);
 				System.out.println("file created with success");
-				
-			} 
+
+			}
     		catch (Exception e) {e.printStackTrace();}
     	}
     	else {
     		System.out.println("file already exists");
-    		
-    		
+
+
     	}
     }
-    
+
     /**
      * this method updates HighScores file if the score is sup then the minimum of Highscore_Table
      * @param Score :is the player score at the end of the game
      * **/
-    
+
     public boolean UpdateHighScoreList( int Score) {
-    	
+
     	boolean ishighscore=false;
-    	
+
     	try {
 			FileInputStream fis=new FileInputStream(highscorefile);
 			ObjectInputStream ois=new ObjectInputStream(fis);
-			
+
 			highscorelist=(int[])ois.readObject();
 			int min=highscorelist[0];
 			int i,j=0;
-			
-			
+
+
 			 if(!scorexists(Score)) {
-				 
+
 					 for (i=0; i < highscorelist.length; i++) {
 						if(highscorelist[i]<min) {
 							min=highscorelist[i];
@@ -196,22 +208,22 @@ public abstract class GameCore {
 					 highscorelist[0]=Score;
 					 ishighscore=true;
 				 }
-				 
+
 			 }
 			 for (i=0; i < highscorelist.length; i++) {
 					System.out.println(highscorelist[i]);
 				}
-			 
+
 			 FileOutputStream fos=new FileOutputStream(highscorefile);
 				ObjectOutputStream oos=new ObjectOutputStream(fos);
 				oos.writeObject(highscorelist);
-				
+
 				return ishighscore;
-				
+
 		}
     	catch (Exception e) {	e.printStackTrace();return ishighscore; }
     }
-    
+
     public boolean scorexists(int number) {
     	for (int i = 0; i < highscorelist.length; i++) {
 			if(highscorelist[i]==number) {
@@ -234,6 +246,14 @@ public abstract class GameCore {
         long startTime = System.currentTimeMillis();
         long currTime = startTime;
 
+        while(!hasStarted){
+            Graphics2D g = screen.getGraphics();
+            firstDraw(g);
+            g.dispose();
+            screen.update();
+            checkStarted();
+        }
+
         while (isRunning) {
             long elapsedTime =
                 System.currentTimeMillis() - currTime;
@@ -250,7 +270,7 @@ public abstract class GameCore {
 
             // draw the screen
             Graphics2D g = screen.getGraphics();
-           
+
             draw(g);
             g.dispose();
 
@@ -279,4 +299,6 @@ public abstract class GameCore {
         method.
     */
     public abstract void draw(Graphics2D g);
+    public abstract void firstDraw(Graphics2D g);
+    public abstract void checkStarted();
 }

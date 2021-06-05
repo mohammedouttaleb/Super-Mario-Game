@@ -34,23 +34,27 @@ public class GameEngine extends GameCore
     
     private GameAction moveLeft;
     private GameAction moveRight;
+    private GameAction start;
     private GameAction jump;
+    private GameAction instructions;
     private GameAction exit;
     private GameAction pause;
     private boolean GameOver=false;
     private boolean IsHighScore=false;
+    private boolean isInstruction = false;
+    private GameAction back;
     private int collectedStars=0;
     //number of badguys killed
     private int CreaturesKilled=0;
-    
+
     private int CreatureCoefficient=0;
     //time couonter variable
     private long elapsedtime=0;
-    
+
     private int Score=0;
-    
+
     private int numLives=2;
-    
+
     public void setCreatureCoefficient(int creatureCoefficient) {
   		CreatureCoefficient = creatureCoefficient;
   	}
@@ -59,9 +63,9 @@ public class GameEngine extends GameCore
   		this.elapsedtime = elapsedtime;
   	}
 
-    
-    
-    
+
+
+
    
     public void init()
     {
@@ -102,19 +106,27 @@ public class GameEngine extends GameCore
     private void initInput() {
         moveLeft = new GameAction("moveLeft");
         moveRight = new GameAction("moveRight");
+        start = new GameAction("start",GameAction.DETECT_INITAL_PRESS_ONLY);
         jump = new GameAction("jump", GameAction.DETECT_INITAL_PRESS_ONLY);
         exit = new GameAction("exit",GameAction.DETECT_INITAL_PRESS_ONLY);
         pause=new GameAction("pause",GameAction.DETECT_INITAL_PRESS_ONLY);
-        
+        instructions = new GameAction("instruction",GameAction.DETECT_INITAL_PRESS_ONLY);
+        back = new GameAction("Back",GameAction.DETECT_INITAL_PRESS_ONLY);
+
+
         inputManager = new InputManager(screen.getFullScreenWindow());
         inputManager.setCursor(InputManager.INVISIBLE_CURSOR);
         
         inputManager.mapToKey(moveLeft, KeyEvent.VK_LEFT);
+        inputManager.mapToKey(start, KeyEvent.VK_S);
         inputManager.mapToKey(moveRight, KeyEvent.VK_RIGHT);
         inputManager.mapToKey(jump, KeyEvent.VK_SPACE);
         inputManager.mapToKey(exit, KeyEvent.VK_Q);
         inputManager.mapToKey(pause, KeyEvent.VK_P);
-        
+
+        inputManager.mapToKey(exit, KeyEvent.VK_ESCAPE);
+        inputManager.mapToKey(instructions, KeyEvent.VK_I);
+        inputManager.mapToKey(back, KeyEvent.VK_M);
     }
     
     
@@ -136,10 +148,10 @@ public class GameEngine extends GameCore
             	pauseGame();
             	return;
             }
-            
-            	
-            
-            if (moveLeft.isPressed()) 
+
+
+
+            if (moveLeft.isPressed())
             {
                 velocityX-=player.getMaxSpeed();
             }
@@ -149,19 +161,34 @@ public class GameEngine extends GameCore
             if (jump.isPressed()) {
                 player.jump(false);
             }
-            
+
             player.setVelocityX(velocityX);
-        
+
         }
         
     }
-    
+
+    public void checkStarted() {
+        if(start.isPressed()){
+            super.stopStarted();
+        }
+        if(instructions.isPressed()){
+            isInstruction = true;
+        }
+        if(back.isPressed()){
+            isInstruction = false;
+        }
+        if(exit.isPressed()){
+            super.lazilyExit();
+        }
+    }
+
     
     public void draw(Graphics2D g) {
         
-        
+
         drawer.draw(g, map, screen.getWidth(), screen.getHeight());
-        
+
         g.setColor(Color.GREEN);
         g.drawString("Score: "+Score,300.0f,20.0f);
         g.setColor(Color.YELLOW);
@@ -175,7 +202,7 @@ public class GameEngine extends GameCore
         else time=(int)elapsedtime/1000+" sec";
         g.setColor(Color.YELLOW);
         g.drawString("Time: "+time,10.0f,20.0f);
-        
+
         if(ispause) {
             if (islevelup){
                 g.setColor(Color.WHITE);
@@ -222,18 +249,52 @@ public class GameEngine extends GameCore
             GameoverMenu menu=new GameoverMenu(this, IsHighScore, screen, Score, mapLoader.currentMap);
             menu.update();
         }
-        
 
-        }   
-    
-    
+
+        }
+
+
     /**this method count the score of the player thanks to this formula  10%time+20%coins+70%creatures-killed */
     public long UpdateScore( int Startsnbr) {
-    	
+
     	Score+= (int)((0.1)*elapsedtime/1000 +0.2*Startsnbr+0.7*CreatureCoefficient)/10;
     	return  Score;
     }
-    
+
+    public void firstDraw(Graphics2D g) {
+        if(!isInstruction){
+            drawer.draw(g, map, screen.getWidth(), screen.getHeight());
+            g.setColor(Color.WHITE);
+            g.drawString("Press \'S\'  to start.",200.0f,150.0f);
+            g.setColor(Color.WHITE);
+            g.drawString("Press \'I\' for instructions.",200.0f,200.0f);
+            g.setColor(Color.WHITE);
+            g.drawString("Press ESC to Exit.",10.0f,20.0f);
+        }else{
+            drawer.draw(g, map, screen.getWidth(), screen.getHeight());
+            g.setColor(Color.WHITE);
+            g.drawString("These are the instructions :",20.0f,100.0f);
+            g.setColor(Color.WHITE);
+            g.drawString("Press \'M\' to go back",400.0f,20.0f);
+            g.setColor(Color.WHITE);
+            g.drawString("Press Space to jump.",100.0f,150.0f);
+            g.setColor(Color.WHITE);
+            g.drawString("Press the left arrow to move to the left",100.0f,200.0f);
+            g.setColor(Color.WHITE);
+            g.drawString("Press the Right arrow to move to the Right.",100.0f,250.0f);
+            g.setColor(Color.WHITE);
+            g.drawString("You'll get killed if the creatures collide with your sides or your head.",50.0f,330.0f);
+            g.setColor(Color.WHITE);
+            g.drawString("You can jump on top of the creatures to kill them.",50.0f,360.0f);
+
+
+        }
+
+
+
+
+    }
+
     
     /**
      * Gets the current map.
@@ -470,7 +531,7 @@ public class GameEngine extends GameCore
                 player.setY(badguy.getY() - player.getHeight());
                 player.jump(true);
                 CreaturesKilled++;
-                
+
                 UpdateScore(0);
             } else {
                 // player dies!
@@ -492,8 +553,8 @@ public class GameEngine extends GameCore
                     } catch (InterruptedException ex) {
                         ex.printStackTrace();
                     }*/
-                    
-                    
+
+
   /*                  try {
             			Thread.sleep(100000);
             		} catch (InterruptedException e) {	e.printStackTrace(); }
@@ -501,9 +562,9 @@ public class GameEngine extends GameCore
                 		 //stop();
 					}
                    */
-                    
-                    
-                    
+
+
+
                 }
             }
         }
