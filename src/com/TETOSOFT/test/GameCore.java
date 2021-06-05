@@ -28,16 +28,24 @@ public abstract class GameCore {
     protected static final int FONT_SIZE = 18;
 
     private static final DisplayMode POSSIBLE_MODES[] = {
-        new DisplayMode(800, 600, 32, 0),
-        new DisplayMode(800, 600, 16, 0),
-        new DisplayMode(800, 600, 24, 0),
-        new DisplayMode(640, 480, 16, 0),
-        new DisplayMode(640, 480, 32, 0),
-        new DisplayMode(640, 480, 24, 0),
-        new DisplayMode(1024, 768, 16, 0),
-        new DisplayMode(1024, 768, 32, 0),
-        new DisplayMode(1024, 768, 24, 0),
-		new DisplayMode(1920, 1080, 32, 0)
+    		new DisplayMode(640, 480, 32,0),
+    		new DisplayMode(640, 480, 24,0),
+    		new DisplayMode(640, 480, 16,0),
+    		new DisplayMode(800, 600, 32,0),
+    		new DisplayMode(800, 600, 24,0),
+    		new DisplayMode(800, 600, 16,0),
+    		new DisplayMode(1280, 768, 32,0),
+    		new DisplayMode(1280, 768, 24,0),
+    		new DisplayMode(1280, 768, 16,0),
+    		new DisplayMode(1024, 768, 32,0),
+    		new DisplayMode(1024, 768, 24,0),
+    		new DisplayMode(1024, 768, 16,0),
+    		new DisplayMode(1280, 1024, 32,0),
+    		new DisplayMode(1280, 1024, 24,0),
+    		new DisplayMode(1280, 1024, 16,0),
+    		new DisplayMode(1920, 1080, 32,0),
+    		new DisplayMode(1920, 1080, 24,0),
+    		new DisplayMode(1920, 1080, 16,0),
     };
 
     private boolean isRunning;
@@ -140,6 +148,7 @@ public abstract class GameCore {
         DisplayMode displayMode =
         screen.findFirstCompatibleMode(POSSIBLE_MODES);
         screen.setFullScreen(displayMode);
+
 
         Window window = screen.getFullScreenWindow();
         window.setFont(new Font("Dialog", Font.PLAIN, FONT_SIZE));
@@ -278,6 +287,10 @@ public abstract class GameCore {
 
             screen.update();
 
+            // don't take a nap! run as fast as possible
+			/*
+			 * try { Thread.sleep(20); } catch (InterruptedException ex) { }
+			 */
         }
         GameoverMenu.isGameoverMenu = false;
 

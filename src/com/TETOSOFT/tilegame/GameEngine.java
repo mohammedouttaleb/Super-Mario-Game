@@ -20,10 +20,8 @@ public class GameEngine extends GameCore
     public static void main(String[] args) 
     {
             new GameEngine().run();
-
     }
-
-
+    
     public static final float GRAVITY = 0.002f;
     private Font police=new Font("Arial",Font.PLAIN,18);
     private Point pointCache = new Point();
@@ -118,8 +116,11 @@ public class GameEngine extends GameCore
         inputManager.setCursor(InputManager.INVISIBLE_CURSOR);
         
         inputManager.mapToKey(moveLeft, KeyEvent.VK_LEFT);
+        inputManager.mapToKey(moveLeft, KeyEvent.VK_A);
         inputManager.mapToKey(start, KeyEvent.VK_S);
         inputManager.mapToKey(moveRight, KeyEvent.VK_RIGHT);
+        inputManager.mapToKey(moveRight, KeyEvent.VK_D);
+        inputManager.mapToKey(jump, KeyEvent.VK_W);
         inputManager.mapToKey(jump, KeyEvent.VK_SPACE);
         inputManager.mapToKey(exit, KeyEvent.VK_Q);
         inputManager.mapToKey(pause, KeyEvent.VK_P);
@@ -127,12 +128,14 @@ public class GameEngine extends GameCore
         inputManager.mapToKey(exit, KeyEvent.VK_ESCAPE);
         inputManager.mapToKey(instructions, KeyEvent.VK_I);
         inputManager.mapToKey(back, KeyEvent.VK_M);
+
     }
     
     
     private void checkInput(long elapsedTime) 
     {
-        
+
+
         if (exit.isPressed()) {
             stop();
         }
@@ -189,8 +192,11 @@ public class GameEngine extends GameCore
 
         drawer.draw(g, map, screen.getWidth(), screen.getHeight());
 
+        g.setColor(Color.WHITE);
+        g.drawString("Press ESC for EXIT.",10.0f,50.0f);
         g.setColor(Color.GREEN);
         g.drawString("Score: "+Score,300.0f,20.0f);
+        g.drawString("Coins: "+collectedStars,300.0f,50.0f);
         g.setColor(Color.YELLOW);
         g.drawString("Lives: "+(numLives),500.0f,20.0f );
         g.setColor(Color.WHITE);
@@ -552,24 +558,14 @@ public class GameEngine extends GameCore
                         Thread.sleep(3000);
                     } catch (InterruptedException ex) {
                         ex.printStackTrace();
-                    }*/
-
-
-  /*                  try {
-            			Thread.sleep(100000);
-            		} catch (InterruptedException e) {	e.printStackTrace(); }
-                	finally {
-                		 //stop();
-					}
-                   */
-
-
-
+                    }
+                    stop();
                 }
             }
         }
     }
-
+    
+    
     /**
      * Gives the player the speicifed power up and removes it
      * from the map.
