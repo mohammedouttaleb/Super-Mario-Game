@@ -1,6 +1,6 @@
-package com.TETOSOFT.tilegame.sprites;
+package com.TETOSOFT.tilegame.tilegame.sprites;
 
-import com.TETOSOFT.graphics.Animation;
+import com.TETOSOFT.tilegame.graphics.Animation;
 
 /**
     A Fly is a Creature that fly slowly in the air.

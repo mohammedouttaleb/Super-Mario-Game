@@ -1,4 +1,4 @@
-package com.TETOSOFT.input;
+package com.TETOSOFT.tilegame.input;
 
 
 public class GameAction 

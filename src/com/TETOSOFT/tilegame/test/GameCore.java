@@ -1,4 +1,4 @@
-package com.TETOSOFT.test;
+package com.TETOSOFT.tilegame.test;
 
 import java.awt.Color;
 import java.awt.DisplayMode;
@@ -14,8 +14,8 @@ import java.io.ObjectOutputStream;
 
 import javax.swing.ImageIcon;
 
-import com.TETOSOFT.graphics.ScreenManager;
-import com.TETOSOFT.tilegame.GameEngine;
+import com.TETOSOFT.tilegame.graphics.ScreenManager;
+import com.TETOSOFT.tilegame.tilegame.GameEngine;
 import com.TETOSOFT.tilegame.GameoverMenu;
 
 /**

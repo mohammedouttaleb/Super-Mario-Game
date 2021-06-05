@@ -1,14 +1,15 @@
-package com.TETOSOFT.tilegame.sprites;
+package com.TETOSOFT.tilegame.tilegame.sprites;
 
 import java.lang.reflect.Constructor;
-import com.TETOSOFT.graphics.*;
+
+import com.TETOSOFT.tilegame.graphics.Sprite;
 
 /**
     A PowerUp class is a Sprite that the player can pick up.
 */
 public abstract class PowerUp extends Sprite {
 
-    public PowerUp(Animation anim) {
+    public PowerUp(com.TETOSOFT.tilegame.graphics.Animation anim) {
         super(anim);
     }
 
@@ -17,7 +18,7 @@ public abstract class PowerUp extends Sprite {
         Constructor constructor = getClass().getConstructors()[0];
         try {
             return constructor.newInstance(
-                new Object[] {(Animation)anim.clone()});
+                new Object[] {(com.TETOSOFT.tilegame.graphics.Animation)anim.clone()});
         }
         catch (Exception ex) {
             // should never happen
@@ -31,7 +32,7 @@ public abstract class PowerUp extends Sprite {
         A Star PowerUp. Gives the player points.
     */
     public static class Star extends PowerUp {
-        public Star(Animation anim) {
+        public Star(com.TETOSOFT.tilegame.graphics.Animation anim) {
             super(anim);
         }
     }
@@ -41,7 +42,7 @@ public abstract class PowerUp extends Sprite {
         A Music PowerUp. Changes the game music.
     */
     public static class Music extends PowerUp {
-        public Music(Animation anim) {
+        public Music(com.TETOSOFT.tilegame.graphics.Animation anim) {
             super(anim);
         }
     }
@@ -51,7 +52,7 @@ public abstract class PowerUp extends Sprite {
         A Goal PowerUp. Advances to the next map.
     */
     public static class Goal extends PowerUp {
-        public Goal(Animation anim) {
+        public Goal(com.TETOSOFT.tilegame.graphics.Animation anim) {
             super(anim);
         }
     }

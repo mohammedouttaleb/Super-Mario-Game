@@ -1,10 +1,10 @@
-package com.TETOSOFT.tilegame;
+package com.TETOSOFT.tilegame.tilegame;
 
 import java.awt.Image;
 import java.util.LinkedList;
 import java.util.Iterator;
 
-import com.TETOSOFT.graphics.Sprite;
+import com.TETOSOFT.tilegame.graphics.Sprite;
 
 /**
     The TileMap class contains the data for a tile-based

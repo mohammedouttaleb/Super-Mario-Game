@@ -1,7 +1,8 @@
-package com.TETOSOFT.tilegame.sprites;
+package com.TETOSOFT.tilegame.tilegame.sprites;
 
 import java.lang.reflect.Constructor;
-import com.TETOSOFT.graphics.*;
+
+import com.TETOSOFT.tilegame.graphics.Sprite;
 
 /**
     A Creature is a Sprite that is affected by gravity and can
@@ -19,18 +20,18 @@ public abstract class Creature extends Sprite {
     public static final int STATE_DYING = 1;
     public static final int STATE_DEAD = 2;
 
-    private Animation left;
-    private Animation right;
-    private Animation deadLeft;
-    private Animation deadRight;
+    private com.TETOSOFT.tilegame.graphics.Animation left;
+    private com.TETOSOFT.tilegame.graphics.Animation right;
+    private com.TETOSOFT.tilegame.graphics.Animation deadLeft;
+    private com.TETOSOFT.tilegame.graphics.Animation deadRight;
     private int state;
     private long stateTime;
 
     /**
         Creates a new Creature with the specified Animations.
     */
-    public Creature(Animation left, Animation right,
-        Animation deadLeft, Animation deadRight)
+    public Creature(com.TETOSOFT.tilegame.graphics.Animation left, com.TETOSOFT.tilegame.graphics.Animation right,
+					com.TETOSOFT.tilegame.graphics.Animation deadLeft, com.TETOSOFT.tilegame.graphics.Animation deadRight)
     {
         super(right);
         this.left = left;
@@ -46,10 +47,10 @@ public abstract class Creature extends Sprite {
         Constructor constructor = getClass().getConstructors()[0];
         try {
             return constructor.newInstance(new Object[] {
-                (Animation)left.clone(),
-                (Animation)right.clone(),
-                (Animation)deadLeft.clone(),
-                (Animation)deadRight.clone()
+                (com.TETOSOFT.tilegame.graphics.Animation)left.clone(),
+                (com.TETOSOFT.tilegame.graphics.Animation)right.clone(),
+                (com.TETOSOFT.tilegame.graphics.Animation)deadLeft.clone(),
+                (com.TETOSOFT.tilegame.graphics.Animation)deadRight.clone()
             });
         }
         catch (Exception ex) {
@@ -143,7 +144,7 @@ public abstract class Creature extends Sprite {
     */
     public void update(long elapsedTime) {
         // select the correct Animation
-        Animation newAnim = anim;
+        com.TETOSOFT.tilegame.graphics.Animation newAnim = anim;
         if (getVelocityX() < 0) {
             newAnim = left;
         }

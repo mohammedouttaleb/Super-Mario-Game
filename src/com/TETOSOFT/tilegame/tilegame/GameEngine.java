@@ -1,25 +1,14 @@
-package com.TETOSOFT.tilegame;
+package com.TETOSOFT.tilegame.tilegame;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
 
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.border.EmptyBorder;
-
-import com.TETOSOFT.graphics.*;
-import com.TETOSOFT.input.*;
-import com.TETOSOFT.test.GameCore;
-import com.TETOSOFT.tilegame.sprites.*;
-
+import com.TETOSOFT.tilegame.GameoverMenu;
+import com.TETOSOFT.tilegame.graphics.Sprite;
+import com.TETOSOFT.tilegame.input.InputManager;
+import com.TETOSOFT.tilegame.test.GameCore;
+import com.TETOSOFT.tilegame.tilegame.sprites.Grub;
 
 
 /**
@@ -38,16 +27,16 @@ public class GameEngine extends GameCore
     public static final float GRAVITY = 0.002f;
     private Font police=new Font("Arial",Font.PLAIN,18);
     private Point pointCache = new Point();
-    private TileMap map;
-    private MapLoader mapLoader;
-    private InputManager inputManager;
-    private TileMapDrawer drawer;
+    private com.TETOSOFT.tilegame.tilegame.TileMap map;
+    private com.TETOSOFT.tilegame.tilegame.MapLoader mapLoader;
+    private com.TETOSOFT.tilegame.input.InputManager inputManager;
+    private com.TETOSOFT.tilegame.tilegame.TileMapDrawer drawer;
     
-    private GameAction moveLeft;
-    private GameAction moveRight;
-    private GameAction jump;
-    private GameAction exit;
-    private GameAction pause;
+    private com.TETOSOFT.tilegame.input.GameAction moveLeft;
+    private com.TETOSOFT.tilegame.input.GameAction moveRight;
+    private com.TETOSOFT.tilegame.input.GameAction jump;
+    private com.TETOSOFT.tilegame.input.GameAction exit;
+    private com.TETOSOFT.tilegame.input.GameAction pause;
     private boolean GameOver=false;
     private boolean IsHighScore=false;
     private int collectedStars=0;
@@ -85,7 +74,7 @@ public class GameEngine extends GameCore
         mapLoader = new MapLoader(screen.getFullScreenWindow().getGraphicsConfiguration());
         
         // load resources
-        drawer = new TileMapDrawer();
+        drawer = new com.TETOSOFT.tilegame.tilegame.TileMapDrawer();
         drawer.setBackground(mapLoader.loadImage("background.jpg"));
         
         // load first map
@@ -109,13 +98,13 @@ public class GameEngine extends GameCore
 
     
     private void initInput() {
-        moveLeft = new GameAction("moveLeft");
-        moveRight = new GameAction("moveRight");
-        jump = new GameAction("jump", GameAction.DETECT_INITAL_PRESS_ONLY);
-        exit = new GameAction("exit",GameAction.DETECT_INITAL_PRESS_ONLY);
-        pause=new GameAction("pause",GameAction.DETECT_INITAL_PRESS_ONLY);
+        moveLeft = new com.TETOSOFT.tilegame.input.GameAction("moveLeft");
+        moveRight = new com.TETOSOFT.tilegame.input.GameAction("moveRight");
+        jump = new com.TETOSOFT.tilegame.input.GameAction("jump", com.TETOSOFT.tilegame.input.GameAction.DETECT_INITAL_PRESS_ONLY);
+        exit = new com.TETOSOFT.tilegame.input.GameAction("exit", com.TETOSOFT.tilegame.input.GameAction.DETECT_INITAL_PRESS_ONLY);
+        pause=new com.TETOSOFT.tilegame.input.GameAction("pause", com.TETOSOFT.tilegame.input.GameAction.DETECT_INITAL_PRESS_ONLY);
         
-        inputManager = new InputManager(screen.getFullScreenWindow());
+        inputManager = new com.TETOSOFT.tilegame.input.InputManager(screen.getFullScreenWindow());
         inputManager.setCursor(InputManager.INVISIBLE_CURSOR);
         
         inputManager.mapToKey(moveLeft, KeyEvent.VK_LEFT);
@@ -134,7 +123,7 @@ public class GameEngine extends GameCore
             stop();
         }
         
-        Player player = (Player)map.getPlayer();
+        com.TETOSOFT.tilegame.tilegame.sprites.Player player = (com.TETOSOFT.tilegame.tilegame.sprites.Player)map.getPlayer();
         if (player.isAlive()) 
         {
             float velocityX = 0;
@@ -241,7 +230,7 @@ public class GameEngine extends GameCore
      * Sprite's X or Y should be changed, not both. Returns null
      * if no collision is detected.
      */
-    public Point getTileCollision(Sprite sprite, float newX, float newY) 
+    public Point getTileCollision(com.TETOSOFT.tilegame.graphics.Sprite sprite, float newX, float newY)
     {
         float fromX = Math.min(sprite.getX(), newX);
         float fromY = Math.min(sprite.getY(), newY);
@@ -249,11 +238,11 @@ public class GameEngine extends GameCore
         float toY = Math.max(sprite.getY(), newY);
         
         // get the tile locations
-        int fromTileX = TileMapDrawer.pixelsToTiles(fromX);
-        int fromTileY = TileMapDrawer.pixelsToTiles(fromY);
-        int toTileX = TileMapDrawer.pixelsToTiles(
+        int fromTileX = com.TETOSOFT.tilegame.tilegame.TileMapDrawer.pixelsToTiles(fromX);
+        int fromTileY = com.TETOSOFT.tilegame.tilegame.TileMapDrawer.pixelsToTiles(fromY);
+        int toTileX = com.TETOSOFT.tilegame.tilegame.TileMapDrawer.pixelsToTiles(
                 toX + sprite.getWidth() - 1);
-        int toTileY = TileMapDrawer.pixelsToTiles(
+        int toTileY = com.TETOSOFT.tilegame.tilegame.TileMapDrawer.pixelsToTiles(
                 toY + sprite.getHeight() - 1);
         
         // check each tile for a collision
@@ -278,17 +267,17 @@ public class GameEngine extends GameCore
      * false if the two Sprites are the same. Returns false if
      * one of the Sprites is a Creature that is not alive.
      */
-    public boolean isCollision(Sprite s1, Sprite s2) {
+    public boolean isCollision(com.TETOSOFT.tilegame.graphics.Sprite s1, com.TETOSOFT.tilegame.graphics.Sprite s2) {
         // if the Sprites are the same, return false
         if (s1 == s2) {
             return false;
         }
         
         // if one of the Sprites is a dead Creature, return false
-        if (s1 instanceof Creature && !((Creature)s1).isAlive()) {
+        if (s1 instanceof com.TETOSOFT.tilegame.tilegame.sprites.Creature && !((com.TETOSOFT.tilegame.tilegame.sprites.Creature)s1).isAlive()) {
             return false;
         }
-        if (s2 instanceof Creature && !((Creature)s2).isAlive()) {
+        if (s2 instanceof com.TETOSOFT.tilegame.tilegame.sprites.Creature && !((com.TETOSOFT.tilegame.tilegame.sprites.Creature)s2).isAlive()) {
             return false;
         }
         
@@ -310,12 +299,12 @@ public class GameEngine extends GameCore
      * Gets the Sprite that collides with the specified Sprite,
      * or null if no Sprite collides with the specified Sprite.
      */
-    public Sprite getSpriteCollision(Sprite sprite) {
+    public com.TETOSOFT.tilegame.graphics.Sprite getSpriteCollision(com.TETOSOFT.tilegame.graphics.Sprite sprite) {
         
         // run through the list of Sprites
         Iterator i = map.getSprites();
         while (i.hasNext()) {
-            Sprite otherSprite = (Sprite)i.next();
+            com.TETOSOFT.tilegame.graphics.Sprite otherSprite = (com.TETOSOFT.tilegame.graphics.Sprite)i.next();
             if (isCollision(sprite, otherSprite)) {
                 // collision found, return the Sprite
                 return otherSprite;
@@ -332,7 +321,7 @@ public class GameEngine extends GameCore
      * in the current map.
      */
     public void update(long elapsedTime) {
-        Creature player = (Creature)map.getPlayer();
+        com.TETOSOFT.tilegame.tilegame.sprites.Creature player = (com.TETOSOFT.tilegame.tilegame.sprites.Creature)map.getPlayer();
         
         if(!ispause)   this.elapsedtime+=elapsedTime;
         
@@ -340,7 +329,7 @@ public class GameEngine extends GameCore
         
         
         // player is dead! start map over
-        if (player.getState() == Creature.STATE_DEAD) {
+        if (player.getState() == com.TETOSOFT.tilegame.tilegame.sprites.Creature.STATE_DEAD) {
             map = mapLoader.reloadMap();
             return;
         }
@@ -355,10 +344,10 @@ public class GameEngine extends GameCore
         // update other sprites
         Iterator i = map.getSprites();
         while (i.hasNext()) {
-            Sprite sprite = (Sprite)i.next();
-            if (sprite instanceof Creature) {
-                Creature creature = (Creature)sprite;
-                if (creature.getState() == Creature.STATE_DEAD) {
+            com.TETOSOFT.tilegame.graphics.Sprite sprite = (com.TETOSOFT.tilegame.graphics.Sprite)i.next();
+            if (sprite instanceof com.TETOSOFT.tilegame.tilegame.sprites.Creature) {
+                com.TETOSOFT.tilegame.tilegame.sprites.Creature creature = (com.TETOSOFT.tilegame.tilegame.sprites.Creature)sprite;
+                if (creature.getState() == com.TETOSOFT.tilegame.tilegame.sprites.Creature.STATE_DEAD) {
                     i.remove();
                 } else {
                     updateCreature(creature, elapsedTime);
@@ -375,8 +364,8 @@ public class GameEngine extends GameCore
      * Updates the creature, applying gravity for creatures that
      * aren't flying, and checks collisions.
      */
-    private void updateCreature(Creature creature,
-            long elapsedTime) {
+    private void updateCreature(com.TETOSOFT.tilegame.tilegame.sprites.Creature creature,
+                                long elapsedTime) {
         
         // apply gravity
         if (!creature.isFlying()) {
@@ -396,16 +385,16 @@ public class GameEngine extends GameCore
             // line up with the tile boundary
             if (dx > 0) {
                 creature.setX(
-                        TileMapDrawer.tilesToPixels(tile.x) -
+                        com.TETOSOFT.tilegame.tilegame.TileMapDrawer.tilesToPixels(tile.x) -
                         creature.getWidth());
             } else if (dx < 0) {
                 creature.setX(
-                        TileMapDrawer.tilesToPixels(tile.x + 1));
+                        com.TETOSOFT.tilegame.tilegame.TileMapDrawer.tilesToPixels(tile.x + 1));
             }
             creature.collideHorizontal();
         }
-        if (creature instanceof Player) {
-            checkPlayerCollision((Player)creature, false,elapsedTime);
+        if (creature instanceof com.TETOSOFT.tilegame.tilegame.sprites.Player) {
+            checkPlayerCollision((com.TETOSOFT.tilegame.tilegame.sprites.Player)creature, false,elapsedTime);
         }
         
         // change y
@@ -419,7 +408,7 @@ public class GameEngine extends GameCore
             // line up with the tile boundary
             if (dy > 0) {
                 creature.setY(
-                        TileMapDrawer.tilesToPixels(tile.y) -
+                        com.TETOSOFT.tilegame.tilegame.TileMapDrawer.tilesToPixels(tile.y) -
                         creature.getHeight());
             } else if (dy < 0) {
                 creature.setY(
@@ -427,9 +416,9 @@ public class GameEngine extends GameCore
             }
             creature.collideVertical();
         }
-        if (creature instanceof Player) {
+        if (creature instanceof com.TETOSOFT.tilegame.tilegame.sprites.Player) {
             boolean canKill = (oldY < creature.getY());
-            checkPlayerCollision((Player)creature, canKill,elapsedTime);
+            checkPlayerCollision((com.TETOSOFT.tilegame.tilegame.sprites.Player)creature, canKill,elapsedTime);
         }
         
     }
@@ -440,20 +429,20 @@ public class GameEngine extends GameCore
      * canKill is true, collisions with Creatures will kill
      * them.
      */
-    public void checkPlayerCollision(Player player,
-            boolean canKill,long elapsedTime) {
+    public void checkPlayerCollision(com.TETOSOFT.tilegame.tilegame.sprites.Player player,
+                                     boolean canKill, long elapsedTime) {
         if (!player.isAlive()) {
             return;
         }
         
         // check for player collision with other sprites
         Sprite collisionSprite = getSpriteCollision(player);
-        if (collisionSprite instanceof PowerUp) {
-            acquirePowerUp((PowerUp)collisionSprite);
+        if (collisionSprite instanceof com.TETOSOFT.tilegame.tilegame.sprites.PowerUp) {
+            acquirePowerUp((com.TETOSOFT.tilegame.tilegame.sprites.PowerUp)collisionSprite);
             UpdateScore(50);
-        } else if (collisionSprite instanceof Creature) {
-            Creature badguy = (Creature)collisionSprite;
-            if( badguy instanceof Fly ) {
+        } else if (collisionSprite instanceof com.TETOSOFT.tilegame.tilegame.sprites.Creature) {
+            com.TETOSOFT.tilegame.tilegame.sprites.Creature badguy = (com.TETOSOFT.tilegame.tilegame.sprites.Creature)collisionSprite;
+            if( badguy instanceof com.TETOSOFT.tilegame.tilegame.sprites.Fly) {
             	//System.out.println("9atele faracha");
             	this.CreatureCoefficient=150;
             }
@@ -463,7 +452,7 @@ public class GameEngine extends GameCore
             }
             if (canKill) {
                 // kill the badguy and make player bounce
-                badguy.setState(Creature.STATE_DYING);
+                badguy.setState(com.TETOSOFT.tilegame.tilegame.sprites.Creature.STATE_DYING);
                 player.setY(badguy.getY() - player.getHeight());
                 player.jump(true);
                 CreaturesKilled++;
@@ -471,7 +460,7 @@ public class GameEngine extends GameCore
                 UpdateScore(0);
             } else {
                 // player dies!
-                player.setState(Creature.STATE_DYING);
+                player.setState(com.TETOSOFT.tilegame.tilegame.sprites.Creature.STATE_DYING);
                 numLives--;
                 if(numLives==0) {
                 	GameOver=true;
@@ -507,11 +496,11 @@ public class GameEngine extends GameCore
      * Gives the player the speicifed power up and removes it
      * from the map.
      */
-    public void acquirePowerUp(PowerUp powerUp) {
+    public void acquirePowerUp(com.TETOSOFT.tilegame.tilegame.sprites.PowerUp powerUp) {
         // remove it from the map
         map.removeSprite(powerUp);
         
-        if (powerUp instanceof PowerUp.Star) {
+        if (powerUp instanceof com.TETOSOFT.tilegame.tilegame.sprites.PowerUp.Star) {
             // do something here, like give the player points
             collectedStars++;
             if(collectedStars==100) 
@@ -520,10 +509,10 @@ public class GameEngine extends GameCore
                 collectedStars=0;
             }
             
-        } else if (powerUp instanceof PowerUp.Music) {
+        } else if (powerUp instanceof com.TETOSOFT.tilegame.tilegame.sprites.PowerUp.Music) {
             // change the music
             
-        } else if (powerUp instanceof PowerUp.Goal) {
+        } else if (powerUp instanceof com.TETOSOFT.tilegame.tilegame.sprites.PowerUp.Goal) {
             // advance to next map      
       
             map = mapLoader.loadNextMap();

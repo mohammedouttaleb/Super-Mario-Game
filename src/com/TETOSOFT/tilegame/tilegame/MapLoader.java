@@ -1,4 +1,4 @@
-package com.TETOSOFT.tilegame;
+package com.TETOSOFT.tilegame.tilegame;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -6,8 +6,8 @@ import java.io.*;
 import java.util.ArrayList;
 import javax.swing.ImageIcon;
 
-import com.TETOSOFT.graphics.*;
-import com.TETOSOFT.tilegame.sprites.*;
+import com.TETOSOFT.tilegame.graphics.Sprite;
+import com.TETOSOFT.tilegame.tilegame.sprites.Grub;
 
 
 /**
@@ -22,12 +22,12 @@ public class MapLoader
     private GraphicsConfiguration gc;
 
     // host sprites used for cloning
-    private Sprite playerSprite;
-    private Sprite musicSprite;
-    private Sprite coinSprite;
-    private Sprite goalSprite;
-    private Sprite grubSprite;
-    private Sprite flySprite;
+    private com.TETOSOFT.tilegame.graphics.Sprite playerSprite;
+    private com.TETOSOFT.tilegame.graphics.Sprite musicSprite;
+    private com.TETOSOFT.tilegame.graphics.Sprite coinSprite;
+    private com.TETOSOFT.tilegame.graphics.Sprite goalSprite;
+    private com.TETOSOFT.tilegame.graphics.Sprite grubSprite;
+    private com.TETOSOFT.tilegame.graphics.Sprite flySprite;
 
     /**
         Creates a new ResourceManager with the specified
@@ -89,9 +89,9 @@ public class MapLoader
     }
 
 
-    public TileMap loadNextMap() 
+    public com.TETOSOFT.tilegame.tilegame.TileMap loadNextMap()
     {
-        TileMap map = null;
+        com.TETOSOFT.tilegame.tilegame.TileMap map = null;
         while (map == null) 
         {
             currentMap++;
@@ -115,7 +115,7 @@ public class MapLoader
     }
 
 
-    public TileMap reloadMap() 
+    public com.TETOSOFT.tilegame.tilegame.TileMap reloadMap()
     {
         try {
             return loadMap(
@@ -128,7 +128,7 @@ public class MapLoader
     }
 
 
-    private TileMap loadMap(String filename)
+    private com.TETOSOFT.tilegame.tilegame.TileMap loadMap(String filename)
         throws IOException
     {
         ArrayList lines = new ArrayList();
@@ -155,7 +155,7 @@ public class MapLoader
 
         // parse the lines to create a TileEngine
         height = lines.size();
-        TileMap newMap = new TileMap(width, height);
+        com.TETOSOFT.tilegame.tilegame.TileMap newMap = new com.TETOSOFT.tilegame.tilegame.TileMap(width, height);
         for (int y=0; y<height; y++) {
             String line = (String)lines.get(y);
             for (int x=0; x<line.length(); x++) {
@@ -187,8 +187,8 @@ public class MapLoader
         }
 
         // add the player to the map
-        Sprite player = (Sprite)playerSprite.clone();
-        player.setX(TileMapDrawer.tilesToPixels(3));
+        com.TETOSOFT.tilegame.graphics.Sprite player = (com.TETOSOFT.tilegame.graphics.Sprite)playerSprite.clone();
+        player.setX(com.TETOSOFT.tilegame.tilegame.TileMapDrawer.tilesToPixels(3));
         player.setY(lines.size());
         newMap.setPlayer(player);
 
@@ -197,16 +197,16 @@ public class MapLoader
 
 
     private void addSprite(TileMap map,
-        Sprite hostSprite, int tileX, int tileY)
+						   com.TETOSOFT.tilegame.graphics.Sprite hostSprite, int tileX, int tileY)
     {
         if (hostSprite != null) {
             // clone the sprite from the "host"
-            Sprite sprite = (Sprite)hostSprite.clone();
+            com.TETOSOFT.tilegame.graphics.Sprite sprite = (Sprite)hostSprite.clone();
 
             // center the sprite
             sprite.setX(
-                TileMapDrawer.tilesToPixels(tileX) +
-                (TileMapDrawer.tilesToPixels(1) -
+                com.TETOSOFT.tilegame.tilegame.TileMapDrawer.tilesToPixels(tileX) +
+                (com.TETOSOFT.tilegame.tilegame.TileMapDrawer.tilesToPixels(1) -
                 sprite.getWidth()) / 2);
 
             // bottom-justify the sprite
@@ -276,9 +276,9 @@ public class MapLoader
         }
 
         // create creature animations
-        Animation[] playerAnim = new Animation[4];
-        Animation[] flyAnim = new Animation[4];
-        Animation[] grubAnim = new Animation[4];
+        com.TETOSOFT.tilegame.graphics.Animation[] playerAnim = new com.TETOSOFT.tilegame.graphics.Animation[4];
+        com.TETOSOFT.tilegame.graphics.Animation[] flyAnim = new com.TETOSOFT.tilegame.graphics.Animation[4];
+        com.TETOSOFT.tilegame.graphics.Animation[] grubAnim = new com.TETOSOFT.tilegame.graphics.Animation[4];
         
         for (int i=0; i<4; i++) 
         {
@@ -288,24 +288,24 @@ public class MapLoader
         }
 
         // create creature sprites
-        playerSprite = new Player (playerAnim[0], playerAnim[1],playerAnim[2], playerAnim[3]);
-        flySprite = new Fly (flyAnim[0], flyAnim[1],flyAnim[2], flyAnim[3]);
-        grubSprite = new Grub (grubAnim[0], grubAnim[1],grubAnim[2], grubAnim[3]);
+        playerSprite = new com.TETOSOFT.tilegame.tilegame.sprites.Player(playerAnim[0], playerAnim[1],playerAnim[2], playerAnim[3]);
+        flySprite = new com.TETOSOFT.tilegame.tilegame.sprites.Fly(flyAnim[0], flyAnim[1],flyAnim[2], flyAnim[3]);
+        grubSprite = new Grub(grubAnim[0], grubAnim[1],grubAnim[2], grubAnim[3]);
     }
 
 
-    private Animation createPlayerAnim(Image player)
+    private com.TETOSOFT.tilegame.graphics.Animation createPlayerAnim(Image player)
     {
-        Animation anim = new Animation();
+        com.TETOSOFT.tilegame.graphics.Animation anim = new com.TETOSOFT.tilegame.graphics.Animation();
         anim.addFrame(player, 250);
      
         return anim;
     }
 
 
-    private Animation createFlyAnim(Image img1, Image img2, Image img3)
+    private com.TETOSOFT.tilegame.graphics.Animation createFlyAnim(Image img1, Image img2, Image img3)
     {
-        Animation anim = new Animation();
+        com.TETOSOFT.tilegame.graphics.Animation anim = new com.TETOSOFT.tilegame.graphics.Animation();
         anim.addFrame(img1, 50);
         anim.addFrame(img2, 50);
         anim.addFrame(img3, 50);
@@ -314,9 +314,9 @@ public class MapLoader
     }
 
 
-    private Animation createGrubAnim(Image img1, Image img2)
+    private com.TETOSOFT.tilegame.graphics.Animation createGrubAnim(Image img1, Image img2)
     {
-        Animation anim = new Animation();
+        com.TETOSOFT.tilegame.graphics.Animation anim = new com.TETOSOFT.tilegame.graphics.Animation();
         anim.addFrame(img1, 250);
         anim.addFrame(img2, 250);
         return anim;
@@ -326,27 +326,27 @@ public class MapLoader
     private void loadPowerUpSprites() 
     {
         // create "goal" sprite
-        Animation anim = new Animation();
+        com.TETOSOFT.tilegame.graphics.Animation anim = new com.TETOSOFT.tilegame.graphics.Animation();
         anim.addFrame(loadImage("heart.png"), 150);
-        goalSprite = new PowerUp.Goal(anim);
+        goalSprite = new com.TETOSOFT.tilegame.tilegame.sprites.PowerUp.Goal(anim);
 
         // create "star" sprite
-        anim = new Animation();
+        anim = new com.TETOSOFT.tilegame.graphics.Animation();
         anim.addFrame(loadImage("coin1.png"),250 ) ;  
         anim.addFrame(loadImage("coin2.png"),250);
         anim.addFrame(loadImage("coin3.png"),250);
         anim.addFrame(loadImage("coin4.png"),250);
         anim.addFrame(loadImage("coin5.png"),250);
-        coinSprite = new PowerUp.Star(anim);
+        coinSprite = new com.TETOSOFT.tilegame.tilegame.sprites.PowerUp.Star(anim);
 
         // create "music" sprite
-        anim = new Animation();
+        anim = new com.TETOSOFT.tilegame.graphics.Animation();
         anim.addFrame(loadImage("music1.png"), 150);
         anim.addFrame(loadImage("music2.png"), 150);
         anim.addFrame(loadImage("music3.png"), 150);
         anim.addFrame(loadImage("music2.png"), 150);
-        musicSprite = new PowerUp.Music(anim);
-        musicSprite=new PowerUp.Music(anim);
+        musicSprite = new com.TETOSOFT.tilegame.tilegame.sprites.PowerUp.Music(anim);
+        musicSprite=new com.TETOSOFT.tilegame.tilegame.sprites.PowerUp.Music(anim);
     }
 
 }

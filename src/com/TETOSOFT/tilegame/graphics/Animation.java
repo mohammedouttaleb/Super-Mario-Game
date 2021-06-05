@@ -1,4 +1,4 @@
-package com.TETOSOFT.graphics;
+package com.TETOSOFT.tilegame.graphics;
 
 import java.awt.Image;
 import java.util.ArrayList;

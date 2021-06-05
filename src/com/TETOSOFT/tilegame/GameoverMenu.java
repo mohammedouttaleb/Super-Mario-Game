@@ -1,6 +1,7 @@
 package com.TETOSOFT.tilegame;
 
-import com.TETOSOFT.graphics.ScreenManager;
+import com.TETOSOFT.tilegame.graphics.ScreenManager;
+import com.TETOSOFT.tilegame.tilegame.GameEngine;
 
 import javax.swing.*;
 import java.awt.*;
@@ -20,7 +21,7 @@ public class GameoverMenu extends JPanel {
     private JLabel score;
     private JLabel level;
     private ScreenManager screen;
-    private GameEngine game;
+    private com.TETOSOFT.tilegame.tilegame.GameEngine game;
 
     public GameoverMenu(GameEngine game, boolean newHighscore, ScreenManager screen, int yourScore, int yourLevel){
         this.setBounds(40,80,screen.getWidth(),screen.getHeight());

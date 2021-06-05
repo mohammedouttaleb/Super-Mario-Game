@@ -1,10 +1,10 @@
-package com.TETOSOFT.tilegame;
+package com.TETOSOFT.tilegame.tilegame;
 
 import java.awt.*;
 import java.util.Iterator;
 
-import com.TETOSOFT.graphics.Sprite;
-import com.TETOSOFT.tilegame.sprites.Creature;
+import com.TETOSOFT.tilegame.graphics.Sprite;
+import com.TETOSOFT.tilegame.tilegame.sprites.Creature;
 
 /**
     The TileMapRenderer class draws a TileMap on the screen.
@@ -79,7 +79,7 @@ public class TileMapDrawer
     public void draw(Graphics2D g, TileMap map,
         int screenWidth, int screenHeight)
     {
-        Sprite player = map.getPlayer();
+        com.TETOSOFT.tilegame.graphics.Sprite player = map.getPlayer();
         int mapWidth = tilesToPixels(map.getWidth());
 
         // get the scrolling position of the map
@@ -137,13 +137,13 @@ public class TileMapDrawer
         // draw sprites
         Iterator i = map.getSprites();
         while (i.hasNext()) {
-            Sprite sprite = (Sprite)i.next();
+            com.TETOSOFT.tilegame.graphics.Sprite sprite = (Sprite)i.next();
             int x = Math.round(sprite.getX()) + offsetX;
             int y = Math.round(sprite.getY()) + offsetY;
             g.drawImage(sprite.getImage(), x, y, null);
 
             // wake up the creature when it's on screen
-            if (sprite instanceof Creature &&
+            if (sprite instanceof com.TETOSOFT.tilegame.tilegame.sprites.Creature &&
                 x >= 0 && x < screenWidth)
             {
                 ((Creature)sprite).wakeUp();

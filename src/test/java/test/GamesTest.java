@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import com.TETOSOFT.tilegame.GameEngine;
+import com.TETOSOFT.tilegame.tilegame.GameEngine;
 
 public class GamesTest {
 

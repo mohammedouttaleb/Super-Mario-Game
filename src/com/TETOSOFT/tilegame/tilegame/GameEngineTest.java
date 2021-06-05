@@ -1,4 +1,4 @@
-package com.TETOSOFT.tilegame;
+package com.TETOSOFT.tilegame.tilegame;
 
 import static org.junit.Assert.*;
 
@@ -9,7 +9,7 @@ public class GameEngineTest {
 	@Test
 	public void test() {
 		System.out.println("test.................");
-		GameEngine ge=new GameEngine();
+		com.TETOSOFT.tilegame.tilegame.GameEngine ge=new GameEngine();
 		ge.setCreatureCoefficient(100);
 		ge.setElapsedtime(10000);
 		
