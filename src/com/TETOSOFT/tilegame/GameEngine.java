@@ -477,10 +477,9 @@ public class GameEngine extends GameCore
                 player.setState(Creature.STATE_DYING);
                 numLives--;
                 if(numLives==0) {
-                	//GameOver=true;
+                	GameOver=true;
                 	IsHighScore=UpdateHighScoreList(Score);
                 	System.out.println(IsHighScore);
-
 
                     System.out.println("level u");
 
