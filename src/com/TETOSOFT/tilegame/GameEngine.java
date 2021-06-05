@@ -92,7 +92,9 @@ public class GameEngine extends GameCore
     /**
      * */
     public void pauseGame() {
+        System.out.println("islevel on pause : " + islevelup);
     	super.pauseGame();
+
     }
 
 
@@ -175,18 +177,33 @@ public class GameEngine extends GameCore
         g.drawString("Time: "+time,10.0f,20.0f);
         
         if(ispause) {
-        	g.setColor(Color.WHITE);
-        	g.drawString("Pause/Resume : Press 'P'",200.0f,235.0f);
-        	g.drawString("Quit : Press 'Q'",200.0f,265.0f);
-        	g.drawString("Music ON/OFF : Press 'M'",200.0f,295.0f);
-        	g.drawString("!!!!!!!!!!!!!!!!!!!!!!!!",200.0f,325.0f);
-        	g.setColor(Color.RED);
-        	g.setFont(new Font("Arial",Font.BOLD,40));
-            g.drawString("Game Paused",180.0f,180.0f);
+            if (islevelup){
+                g.setColor(Color.WHITE);
+                g.drawString("Continue : Press 'P'", 200.0f, 235.0f);
+                g.drawString("Quit : Press 'Q'", 200.0f, 265.0f);
+                g.drawString("!!!!!!!!!!!!!!!!!!!!!!!!", 200.0f, 325.0f);
+                g.setColor(Color.BLUE);
+                g.drawString("LEVEL number : " + (mapLoader.currentMap-1), 180.0f, 170.0f);
+                g.drawString("Score : " + Score, 180.0f, 200.0f);
+                g.setFont(new Font("Arial", Font.BOLD, 40));
+                g.setColor(Color.GREEN);
+                g.drawString("LEVEL UP", 180.0f, 100.0f);
+            }
+            else{
+                System.out.println("we are there");
+                g.setColor(Color.WHITE);
+                g.drawString("Pause/Resume : Press 'P'", 200.0f, 235.0f);
+                g.drawString("Quit : Press 'Q'", 200.0f, 265.0f);
+                g.drawString("Music ON/OFF : Press 'M'", 200.0f, 295.0f);
+                g.drawString("!!!!!!!!!!!!!!!!!!!!!!!!", 200.0f, 325.0f);
+                g.setColor(Color.RED);
+                g.setFont(new Font("Arial", Font.BOLD, 40));
+                g.drawString("Game Paused", 180.0f, 180.0f);
+            }
 
 
         }
-        
+
         if(GameOver) {
 
         	g.setColor(Color.RED);
@@ -324,10 +341,7 @@ public class GameEngine extends GameCore
         Creature player = (Creature)map.getPlayer();
         
         if(!ispause)   this.elapsedtime+=elapsedTime;
-        
-        
-        
-        
+
         // player is dead! start map over
         if (player.getState() == Creature.STATE_DEAD) {
             map = mapLoader.reloadMap();
@@ -463,9 +477,13 @@ public class GameEngine extends GameCore
                 player.setState(Creature.STATE_DYING);
                 numLives--;
                 if(numLives==0) {
-                	GameOver=true;
+                	//GameOver=true;
                 	IsHighScore=UpdateHighScoreList(Score);
                 	System.out.println(IsHighScore);
+
+
+                    System.out.println("level u");
+
                 	draw(screen.getGraphics());
                 	screen.update();
 
@@ -514,9 +532,12 @@ public class GameEngine extends GameCore
             
         } else if (powerUp instanceof PowerUp.Goal) {
             // advance to next map      
-      
+
+            System.out.println("level up");
             map = mapLoader.loadNextMap();
-            System.out.println("level u");
+            islevelup = true;
+
+            pauseGame();
         }
     }
     

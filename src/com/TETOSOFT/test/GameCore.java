@@ -41,6 +41,7 @@ public abstract class GameCore {
 
     private boolean isRunning;
     protected boolean ispause=false;
+    protected boolean islevelup = false;
     protected ScreenManager screen;
     private File highscorefile=new File("highscore.txt");
     private int[] highscorelist= {-1,-2,-3,-4,-5};
@@ -64,6 +65,9 @@ public abstract class GameCore {
      * */
     public void pauseGame() {
     	ispause= !ispause;
+		if (islevelup && !ispause)
+			islevelup = false;
+
     }
 
 
