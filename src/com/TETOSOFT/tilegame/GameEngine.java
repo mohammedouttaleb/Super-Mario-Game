@@ -217,11 +217,11 @@ public class GameEngine extends GameCore
                 g.drawString("Quit : Press 'Q'", 200.0f, 265.0f);
                 g.drawString("!!!!!!!!!!!!!!!!!!!!!!!!", 200.0f, 325.0f);
                 g.setColor(Color.BLUE);
-                g.drawString("LEVEL number : " + (mapLoader.currentMap-1), 180.0f, 170.0f);
+                g.drawString("LEVEL number : " + (mapLoader.currentMap), 180.0f, 180.0f);
                 g.drawString("Score : " + Score, 180.0f, 200.0f);
                 g.setFont(new Font("Arial", Font.BOLD, 40));
                 g.setColor(Color.GREEN);
-                g.drawString("LEVEL UP", 180.0f, 100.0f);
+                g.drawString("LEVEL UP", 180.0f, 130.0f);
             }
             else{
                 System.out.println("we are there");
