@@ -23,7 +23,7 @@ import com.TETOSOFT.tilegame.sprites.*;
 
 
 /**
- * GameManager manages all parts of the game.
+ * GameManager manages all parts of the game.dsfdsd
  */
 public class GameEngine extends GameCore
 {
@@ -61,9 +61,19 @@ public class GameEngine extends GameCore
     private int Score=0;
     
     private int numLives=2;
+    
+    public void setCreatureCoefficient(int creatureCoefficient) {
+  		CreatureCoefficient = creatureCoefficient;
+  	}
 
+      public void setElapsedtime(long elapsedtime) {
+  		this.elapsedtime = elapsedtime;
+  	}
 
-
+    
+    
+    
+   
     public void init()
     {
         super.init();
@@ -96,7 +106,7 @@ public class GameEngine extends GameCore
     	super.pauseGame();
     }
 
-    
+
     
     private void initInput() {
         moveLeft = new GameAction("moveLeft");
@@ -212,7 +222,7 @@ public class GameEngine extends GameCore
     
     
     /**this method count the score of the player thanks to this formula  10%time+20%coins+70%creatures-killed */
-    private long UpdateScore( int Startsnbr) {
+    public long UpdateScore( int Startsnbr) {
     	
     	Score+= (int)((0.1)*elapsedtime/1000 +0.2*Startsnbr+0.7*CreatureCoefficient)/10;
     	return  Score;

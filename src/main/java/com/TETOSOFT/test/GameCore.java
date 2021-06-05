@@ -208,7 +208,7 @@ public abstract class GameCore {
     	catch (Exception e) {	e.printStackTrace();return ishighscore; }
     }
     
-    private boolean scorexists(int number) {
+    public boolean scorexists(int number) {
     	for (int i = 0; i < highscorelist.length; i++) {
 			if(highscorelist[i]==number) {
 				return true;
