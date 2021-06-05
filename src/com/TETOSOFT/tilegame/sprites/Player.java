@@ -8,7 +8,12 @@ import com.TETOSOFT.graphics.Animation;
 public class Player extends Creature 
 {
 
-    private static final float JUMP_SPEED = -.95f;
+
+    private static final float JUMP_SPEED = -.5f;
+
+    private static float effectiveJumpSpeed = JUMP_SPEED;
+    private static long jumpTimer = 1;
+    private boolean isMidJump = true;
 
     private boolean onGround;
 
@@ -17,6 +22,33 @@ public class Player extends Creature
         super(left, right, deadLeft, deadRight);
     }
 
+
+    @Override
+    public boolean isFlying() {
+        return isMidJump;
+    }
+
+
+
+    public void fly() {
+        //long startTime = System.currentTimeMillis();
+        if (onGround) {
+            onGround = false;
+            this.jumpTimer = System.currentTimeMillis();
+        }
+        long currentTime = System.currentTimeMillis();
+        System.out.println(jumpTimer + "ms --> " + currentTime + "ms");
+        System.out.println(currentTime - jumpTimer);
+//        jumpTimer -= (currentTime - jumpTimer);
+        if (currentTime - jumpTimer <= 450) {
+            setVelocityY(JUMP_SPEED);
+            isMidJump = true;
+        }
+        else {
+            isMidJump = false;
+            return;
+        }
+    }
 
     public void collideHorizontal() {
         setVelocityX(0);

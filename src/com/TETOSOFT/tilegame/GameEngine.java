@@ -37,6 +37,7 @@ public class GameEngine extends GameCore
     private GameAction instructions;
     private GameAction exit;
     private GameAction pause;
+    private GameAction fly;
     private boolean GameOver=false;
     private boolean IsHighScore=false;
     private boolean isInstruction = false;
@@ -110,6 +111,7 @@ public class GameEngine extends GameCore
         pause=new GameAction("pause",GameAction.DETECT_INITAL_PRESS_ONLY);
         instructions = new GameAction("instruction",GameAction.DETECT_INITAL_PRESS_ONLY);
         back = new GameAction("Back",GameAction.DETECT_INITAL_PRESS_ONLY);
+        fly = new GameAction("fly");
 
 
         inputManager = new InputManager(screen.getFullScreenWindow());
@@ -124,8 +126,9 @@ public class GameEngine extends GameCore
         inputManager.mapToKey(jump, KeyEvent.VK_SPACE);
         inputManager.mapToKey(exit, KeyEvent.VK_Q);
         inputManager.mapToKey(pause, KeyEvent.VK_P);
+        inputManager.mapToKey(fly, KeyEvent.VK_SPACE);
 
-        inputManager.mapToKey(exit, KeyEvent.VK_ESCAPE);
+        inputManager.mapToKey(exit, KeyEvent.VK_G);
         inputManager.mapToKey(instructions, KeyEvent.VK_I);
         inputManager.mapToKey(back, KeyEvent.VK_M);
 
@@ -164,6 +167,10 @@ public class GameEngine extends GameCore
             if (jump.isPressed()) {
                 player.jump(false);
             }
+            if (fly.isPressed()) {
+                player.fly();
+            }
+
 
             player.setVelocityX(velocityX);
 
