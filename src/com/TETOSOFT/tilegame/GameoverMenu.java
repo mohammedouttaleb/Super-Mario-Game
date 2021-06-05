@@ -48,7 +48,7 @@ public class GameoverMenu extends JPanel {
 
 
         if (newHighscore) {
-            var imageIcon = new ImageIcon("/images/Nrecord.jpg");
+            ImageIcon imageIcon = new ImageIcon("/images/Nrecord.jpg");
             newHighscoreImage.setIcon(imageIcon);
 
             score.setFont(new Font("Arial", Font.BOLD,20));
