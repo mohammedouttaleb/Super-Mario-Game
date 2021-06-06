@@ -49,7 +49,11 @@ public class GameoverMenu extends JPanel {
 
 
         if (newHighscore) {
-            ImageIcon imageIcon = new ImageIcon("/images/Nrecord.jpg");
+            System.out.println("game over hishcore");
+
+            ImageIcon imageIcon = new ImageIcon("src/com/TETOSOFT/tilegame/Nrecord.jpg");
+            if (imageIcon != null)
+                System.out.println("the re is an image " + imageIcon.toString());
             newHighscoreImage.setIcon(imageIcon);
 
             score.setFont(new Font("Arial", Font.BOLD,20));

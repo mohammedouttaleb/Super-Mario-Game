@@ -6,11 +6,7 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Window;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 
 import javax.swing.ImageIcon;
 
@@ -196,6 +192,10 @@ public abstract class GameCore {
 			ObjectInputStream ois=new ObjectInputStream(fis);
 
 			highscorelist=(int[])ois.readObject();
+			for(int i = 0; i < highscorelist.length; i++)
+			{
+				System.out.println("score " + highscorelist[i]);
+			}
 			int min=highscorelist[0];
 			int i,j=0;
 

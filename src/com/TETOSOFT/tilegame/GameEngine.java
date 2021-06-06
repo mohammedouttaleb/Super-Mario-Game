@@ -19,8 +19,10 @@ import javax.sound.sampled.FloatControl;
  */
 public class GameEngine extends GameCore
 {
-    
-    public static void main(String[] args) 
+
+    private boolean nHighscore = false;
+
+    public static void main(String[] args)
     {
             new GameEngine().run();
     }
@@ -98,7 +100,7 @@ public class GameEngine extends GameCore
     /**
      * */
     public void pauseGame() {
-        System.out.println("islevel on pause : " + islevelup);
+        //System.out.println("islevel on pause : " + islevelup);
     	super.pauseGame();
 
     }
@@ -204,7 +206,7 @@ public class GameEngine extends GameCore
     public void draw(Graphics2D g) {
 
 
-        System.out.println("we are here");
+        //System.out.println("we are here");
         drawer.draw(g, map, screen.getWidth(), screen.getHeight());
 
         g.setColor(Color.WHITE);
@@ -213,9 +215,9 @@ public class GameEngine extends GameCore
         g.drawString("Score: "+Score,300.0f,80.0f);
         g.drawString("Coins: "+collectedStars,300.0f,50.0f);
         g.setColor(Color.YELLOW);
-        g.drawString("Lives: "+(numLives),380.0f,50.0f );
+        g.drawString("Lives: "+(numLives),400.0f,50.0f );
         g.setColor(Color.WHITE);
-        g.drawString("Home: "+mapLoader.currentMap,380.0f,80.0f);
+        g.drawString("Home: "+mapLoader.currentMap,400.0f,80.0f);
         g.setFont(police);
         //g.drawString("Badguys killed: "+CreaturesKilled, 460, 25);
         String time="";
@@ -238,7 +240,7 @@ public class GameEngine extends GameCore
                 g.drawString("LEVEL UP", 180.0f, 130.0f);
             }
             else{
-                System.out.println("we are there");
+               // System.out.println("we are there");
                 g.setColor(Color.WHITE);
                 g.drawString("Pause/Resume : Press 'P'", 200.0f, 235.0f);
                 g.drawString("Quit : Press 'Q'", 200.0f, 265.0f);
@@ -254,20 +256,24 @@ public class GameEngine extends GameCore
 
         if(GameOver) {
 
+
         	g.setColor(Color.RED);
         	g.setFont(new Font("Arial", Font.BOLD,35));
             g.drawString("Game Over",220.0f,180.0f);
             if(!IsHighScore) {
+                System.out.println("not a highscore");
             g.setColor(Color.RED);
             g.drawString("Your score: "+Score,220.0f,240.0f);
             }
             else {
+                System.out.println("is a highscore");
             	g.setColor(Color.GREEN);
                 g.drawImage(mapLoader.loadImage("Nrecord.jpg"), 230, 220, null);
             	g.drawString("New HighScore score: "+Score,200.0f,360.0f);
             }
-
-            GameoverMenu menu=new GameoverMenu(this, IsHighScore, screen, Score, mapLoader.currentMap);
+            //IsHighScore = UpdateHighScoreList(Score);
+            GameoverMenu menu=new GameoverMenu(this, nHighscore, screen, Score, mapLoader.currentMap);
+            IsHighScore = false;
             menu.update();
         }
 
@@ -565,8 +571,8 @@ public class GameEngine extends GameCore
                 if(numLives==0) {
                     GameOver = true;
                     IsHighScore = UpdateHighScoreList(Score);
-                    System.out.println(IsHighScore);
-
+                    System.out.println("is highscore ?"+  IsHighScore);
+                    nHighscore = IsHighScore;
                     System.out.println("level u");
 
                     draw(screen.getGraphics());
