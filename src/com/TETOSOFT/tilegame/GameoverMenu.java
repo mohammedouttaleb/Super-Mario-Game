@@ -34,10 +34,10 @@ public class GameoverMenu extends JPanel {
 
         gameOver.setForeground(Color.red);
         //GameOver.setSize();
-        gameOver.setFont(new Font("Arial", Font.BOLD,35));
+        gameOver.setFont(new Font("Arial", Font.BOLD,100));
         gameOver.setText("Game Over");
 
-        level.setFont(new Font("Arial", Font.BOLD,20));
+        level.setFont(new Font("Arial", Font.BOLD,50));
         level.setForeground(Color.BLUE);
         String levelText = "level  : " + yourLevel;
         level.setText(levelText);
@@ -56,14 +56,14 @@ public class GameoverMenu extends JPanel {
                 System.out.println("the re is an image " + imageIcon.toString());
             newHighscoreImage.setIcon(imageIcon);
 
-            score.setFont(new Font("Arial", Font.BOLD,20));
+            score.setFont(new Font("Arial", Font.BOLD,50));
             score.setForeground(Color.GREEN);
             String scoreText = "new highscore  : " + yourScore;
             score.setText(scoreText);
         }
         else{
-            score.setFont(new Font("Arial", Font.BOLD,20));
-            score.setForeground(Color.RED);
+            score.setFont(new Font("Arial", Font.BOLD,50));
+            score.setForeground(Color.yellow);
             String scoreText = "your score is : " + yourScore;
             score.setText(scoreText);
         }
