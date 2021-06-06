@@ -34,6 +34,7 @@ public class GameEngine extends GameCore
     private MapLoader mapLoader;
     private InputManager inputManager;
     private TileMapDrawer drawer;
+    private static boolean isMuted = false;
     
     private GameAction moveLeft;
     private GameAction moveRight;
@@ -43,6 +44,7 @@ public class GameEngine extends GameCore
     private GameAction exit;
     private GameAction pause;
     private GameAction fly;
+    private GameAction toggleMusic;
     private boolean GameOver=false;
     private boolean IsHighScore=false;
     private boolean isInstruction = false;
@@ -74,7 +76,7 @@ public class GameEngine extends GameCore
     public void init()
     {
         super.init();
-        
+        song.play();
         // set up input manager
         initInput();
         
@@ -117,6 +119,7 @@ public class GameEngine extends GameCore
         instructions = new GameAction("instruction",GameAction.DETECT_INITAL_PRESS_ONLY);
         back = new GameAction("Back",GameAction.DETECT_INITAL_PRESS_ONLY);
         fly = new GameAction("fly");
+        toggleMusic = new GameAction("toggleMusic", GameAction.DETECT_INITAL_PRESS_ONLY);
 
 
         inputManager = new InputManager(screen.getFullScreenWindow());
@@ -131,9 +134,10 @@ public class GameEngine extends GameCore
         inputManager.mapToKey(jump, KeyEvent.VK_SPACE);
         inputManager.mapToKey(exit, KeyEvent.VK_Q);
         inputManager.mapToKey(pause, KeyEvent.VK_P);
+        inputManager.mapToKey(toggleMusic, KeyEvent.VK_N);
 
 //        disabled fly (controlled jump) due to unknown conflict
-//        inputManager.mapToKey(fly, KeyEvent.VK_CONTROL);
+//        inputManager.mapToKey(fly, KeyEvent.VK_SPACE);
 
         inputManager.mapToKey(exit, KeyEvent.VK_ESCAPE);
         inputManager.mapToKey(instructions, KeyEvent.VK_I);
@@ -149,7 +153,18 @@ public class GameEngine extends GameCore
         if (exit.isPressed()) {
             stop();
         }
-        
+
+        if (toggleMusic.isPressed()) {
+            if (!isMuted) {
+                song.stop();
+                isMuted = true;
+            }
+            else {
+                song.play();
+                isMuted = false;
+            }
+        }
+
         Player player = (Player)map.getPlayer();
         if (player.isAlive()) 
         {
