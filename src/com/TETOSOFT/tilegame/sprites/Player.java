@@ -13,7 +13,7 @@ public class Player extends Creature
 
     private static float effectiveJumpSpeed = JUMP_SPEED;
     private static long jumpTimer = 1;
-    private boolean isMidJump = true;
+    private boolean isMidJump = false;
 
     private boolean onGround;
 
@@ -23,10 +23,10 @@ public class Player extends Creature
     }
 
 
-    @Override
-    public boolean isFlying() {
-        return isMidJump;
-    }
+//    @Override
+//    public boolean isFlying() {
+//        return isMidJump;
+//    }
 
 
 
