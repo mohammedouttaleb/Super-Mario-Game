@@ -129,9 +129,11 @@ public class GameEngine extends GameCore
         inputManager.mapToKey(jump, KeyEvent.VK_SPACE);
         inputManager.mapToKey(exit, KeyEvent.VK_Q);
         inputManager.mapToKey(pause, KeyEvent.VK_P);
-        inputManager.mapToKey(fly, KeyEvent.VK_SPACE);
 
-        inputManager.mapToKey(exit, KeyEvent.VK_G);
+//        disabled fly (controlled jump) due to unknown conflict
+//        inputManager.mapToKey(fly, KeyEvent.VK_CONTROL);
+
+        inputManager.mapToKey(exit, KeyEvent.VK_ESCAPE);
         inputManager.mapToKey(instructions, KeyEvent.VK_I);
         inputManager.mapToKey(back, KeyEvent.VK_M);
 
