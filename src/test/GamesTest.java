@@ -32,7 +32,7 @@ public void testUpdateScore() {
 			
 
 	}
-	@Test
+/*	@Test
 	public void testscorexists() {
 		
 		System.out.println("Test3...............");
@@ -48,5 +48,5 @@ public void testUpdateScore() {
 		 assertEquals(false, exists2);
 		 assertEquals(false, exists3);
 		
-	}
+	}*/
 }
