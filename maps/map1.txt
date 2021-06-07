@@ -2,8 +2,8 @@
                                                                  
                                                                                 o    
                                                                                o o      
-                     o 1 o    o 2 o                                           o o o  
-             1      IIIIIII  IIIIIII       oooo         1                    o o o o    
+                     o 1 o    o 2 o                                           o ! o  
+             1      IIIIIII  IIIIIII       o!oo         1                    o o o o    
             II                         2   IIII        III        2   2   2
                       2     2     2          2        2        2            2EF
                  EF                   EF                       EF           EGD
